@@ -619,6 +619,11 @@ class manager
 				}
 
 				$this->db->sql_freeresult($result);
+
+				if (empty($subscriptions[$id]))
+				{
+					unset($subscriptions[$id]);
+				}
 			}
 		}
 
