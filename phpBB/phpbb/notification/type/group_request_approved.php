@@ -54,7 +54,7 @@ class group_request_approved extends \phpbb\notification\type\base
 
 		foreach ($group['user_ids'] as $user_id)
 		{
-			$users[$user_id] = array('');
+			$users[$user_id] = $this->notification_manager->get_default_methods();
 		}
 
 		return $users;
@@ -83,7 +83,7 @@ class group_request_approved extends \phpbb\notification\type\base
 	{
 		$this->set_data('group_name', $group['group_name']);
 
-		return parent::create_insert_array($group, $pre_create_data);
+		parent::create_insert_array($group, $pre_create_data);
 	}
 
 	/**

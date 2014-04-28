@@ -39,4 +39,11 @@ interface method_interface
 	* Parse the queue and notify the users
 	*/
 	public function notify();
+
+	/**
+	* Is the method enable by default?
+	*
+	* @return bool
+	*/
+	public function is_enabled_by_default();
 }

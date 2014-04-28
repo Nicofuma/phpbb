@@ -51,6 +51,14 @@ class manager
 	/** @var string */
 	protected $notifications_table;
 
+	/**
+	* @return string
+	*/
+	public function getNotificationsTable()
+	{
+		return $this->notifications_table;
+	}
+
 	/** @var string */
 	protected $user_notifications_table;
 
@@ -399,8 +407,6 @@ class manager
 		$pre_create_data = $notification->pre_create_insert_array($data, $notify_users);
 		unset($notification);
 
-		$insert_buffer = new \phpbb\db\sql_insert_buffer($this->db, $this->notifications_table);
-
 		// Go through each user so we can insert a row in the DB and then notify them by their desired means
 		foreach ($notify_users as $user => $methods)
 		{
@@ -408,8 +414,8 @@ class manager
 
 			$notification->user_id = (int) $user;
 
-			// Insert notification row using buffer.
-			$insert_buffer->insert($notification->create_insert_array($data, $pre_create_data));
+			// Generate the insert_array
+			$notification->create_insert_array($data, $pre_create_data);
 
 			// Users are needed to send notifications
 			$user_ids = array_merge($user_ids, $notification->users_to_query());
@@ -417,19 +423,14 @@ class manager
 			foreach ($methods as $method)
 			{
 				// setup the notification methods and add the notification to the queue
-				if ($method) // blank means we just insert it as a notification, but do not notify them by any other means
-				{
 					if (!isset($notification_methods[$method]))
 					{
 						$notification_methods[$method] = $this->get_method_class($method);
 					}
 
 					$notification_methods[$method]->add_to_queue($notification);
-				}
 			}
 		}
-
-		$insert_buffer->flush();
 
 		// We need to load all of the users to send notifications
 		$this->user_loader->load_users($user_ids);
@@ -596,23 +597,20 @@ class manager
 				$result = $this->db->sql_query($sql);
 
 				$row = $this->db->sql_fetchrow($result);
-				if (!$row)
-				{
-					// No rows at all, default to ''
-					$subscriptions[$id] = array('');
-				}
-				else
+
+				$subscriptions[$id] = $this->get_default_methods();
+
+				if ($row)
 				{
 					do
 					{
 						if (!$row['notify'])
 						{
+							if (($index = array_search($row['method'], $subscriptions[$id])) !== false)
+							{
+								unset($subscriptions[$id][$index]);
+							}
 							continue;
-						}
-
-						if (!isset($subscriptions[$id]))
-						{
-							$subscriptions[$id] = array();
 						}
 
 						$subscriptions[$id][] = $row['method'];
@@ -632,17 +630,11 @@ class manager
 	*
 	* @param string $item_type Type identifier of the subscription
 	* @param int $item_id The id of the item
-	* @param string $method The method of the notification e.g. '', 'email', or 'jabber'
+	* @param string $method The method of the notification e.g. 'in_board', 'email', or 'jabber'
 	* @param bool|int $user_id The user_id to add the subscription for (bool false for current user)
 	*/
-	public function add_subscription($item_type, $item_id = 0, $method = '', $user_id = false)
+	public function add_subscription($item_type, $item_id = 0, $method, $user_id = false)
 	{
-		if ($method !== '')
-		{
-			// Make sure to subscribe them to the base subscription
-			$this->add_subscription($item_type, $item_id, '', $user_id);
-		}
-
 		$user_id = ($user_id === false) ? $this->user->data['user_id'] : $user_id;
 
 		$sql = 'SELECT notify
@@ -684,32 +676,12 @@ class manager
 	*
 	* @param string $item_type Type identifier of the subscription
 	* @param int $item_id The id of the item
-	* @param string $method The method of the notification e.g. '', 'email', or 'jabber'
+	* @param string $method The method of the notification e.g. 'in_board', 'email', or 'jabber'
 	* @param bool|int $user_id The user_id to add the subscription for (bool false for current user)
 	*/
-	public function delete_subscription($item_type, $item_id = 0, $method = '', $user_id = false)
+	public function delete_subscription($item_type, $item_id = 0, $method, $user_id = false)
 	{
 		$user_id = ($user_id === false) ? $this->user->data['user_id'] : $user_id;
-
-		// If no method, make sure that no other notification methods for this item are selected before deleting
-		if ($method === '')
-		{
-			$sql = 'SELECT COUNT(*) as num_notifications
-				FROM ' . $this->user_notifications_table . "
-				WHERE item_type = '" . $this->db->sql_escape($item_type) . "'
-					AND item_id = " . (int) $item_id . '
-					AND user_id = ' .(int) $user_id . "
-					AND method <> ''
-					AND notify = 1";
-			$this->db->sql_query($sql);
-			$num_notifications = $this->db->sql_fetchfield('num_notifications');
-			$this->db->sql_freeresult();
-
-			if ($num_notifications)
-			{
-				return;
-			}
-		}
 
 		$sql = 'UPDATE ' . $this->user_notifications_table . "
 			SET notify = 0
@@ -804,6 +776,24 @@ class manager
 		$this->db->sql_query($sql);
 
 		$this->config->set('read_notification_last_gc', time(), false);
+	}
+
+	/**
+	* Helper to get the list of methods enabled by default
+	*/
+	public function get_default_methods()
+	{
+		$default_methods = array();
+
+		foreach ($this->notification_methods as $method_name => $method)
+		{
+			if ($method->is_enabled_by_default())
+			{
+				$default_methods[] = $method->get_type();
+			}
+		}
+
+		return $default_methods;
 	}
 
 	/**
