@@ -110,13 +110,7 @@ class approve_topic extends \phpbb\notification\type\topic
 	}
 
 	/**
-	* Function for preparing the data for insertion in an SQL query
-	* (The service handles insertion)
-	*
-	* @param array $post Data from submit_post
-	* @param array $pre_create_data Data from pre_create_insert_array()
-	*
-	* @return array Array of data ready to be inserted into the database
+	* {@inheritdoc}
 	*/
 	public function create_insert_array($post, $pre_create_data = array())
 	{
@@ -126,6 +120,9 @@ class approve_topic extends \phpbb\notification\type\topic
 		$this->notification_time = time();
 	}
 
+	/**
+	* {@inheritdoc}
+	*/
 	public function get_insert_array()
 	{
 		$data = parent::get_insert_array();
