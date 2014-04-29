@@ -67,11 +67,11 @@ class phpbb_notification_test extends phpbb_tests_notification_base
 
 	public function test_subscriptions()
 	{
-		$this->notifications->delete_subscription('post', 0, 'in_board', 2);
+		$this->notifications->delete_subscription('post', 0, 'board', 2);
 
 		$this->assertArrayNotHasKey('post', $this->notifications->get_global_subscriptions(2));
 
-		$this->notifications->add_subscription('post', 0, 'in_board', 2);
+		$this->notifications->add_subscription('post', 0, 'board', 2);
 
 		$this->assertArrayHasKey('post', $this->notifications->get_global_subscriptions(2));
 	}
