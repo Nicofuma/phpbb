@@ -654,17 +654,10 @@ class manager
 	*/
 	public function purge_notifications($notification_type_name)
 	{
-		$notification_type_id = $this->get_notification_type_id($notification_type_name);
-
-		$sql = 'DELETE FROM ' . $this->notifications_table . '
-			WHERE notification_type_id = ' . (int) $notification_type_id;
-		$this->db->sql_query($sql);
-
-		$sql = 'DELETE FROM ' . $this->notification_types_table . '
-			WHERE notification_type_id = ' . (int) $notification_type_id;
-		$this->db->sql_query($sql);
-
-		$this->cache->destroy('notification_type_ids');
+		foreach ($this->get_available_subscription_methods() as $method_name => $method)
+		{
+			$method->purge_notifications($notification_type_name);
+		}
 	}
 
 	/**
@@ -692,12 +685,10 @@ class manager
 	*/
 	public function prune_notifications($timestamp, $only_read = true)
 	{
-		$sql = 'DELETE FROM ' . $this->notifications_table . '
-			WHERE notification_time < ' . (int) $timestamp .
-				(($only_read) ? ' AND notification_read = 1' : '');
-		$this->db->sql_query($sql);
-
-		$this->config->set('read_notification_last_gc', time(), false);
+		foreach ($this->get_available_subscription_methods() as $method_name => $method)
+		{
+			$method->prune_notifications($timestamp, $only_read);
+		}
 	}
 
 	/**
