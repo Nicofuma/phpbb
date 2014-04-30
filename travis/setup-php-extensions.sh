@@ -52,6 +52,7 @@ then
 fi
 
 #mbstring
+cat $php_ini_file
 if [ `php -r "echo (int) version_compare(PHP_VERSION, '5.6.0-a3', '>=');"` == "1" ]
 then
 	echo 'mbstring.http_input=pass' >> "$php_ini_file"
