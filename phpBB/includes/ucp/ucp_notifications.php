@@ -129,7 +129,7 @@ class ucp_notifications
 					}
 				}
 
-				$notifications = $phpbb_notifications->load_notifications(array(
+				$notifications = $phpbb_notifications->load_notifications('board', array(
 					'start'			=> $start,
 					'limit'			=> $config['topics_per_page'],
 					'count_total'	=> true,
