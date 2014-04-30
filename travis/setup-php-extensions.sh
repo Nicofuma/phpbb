@@ -51,6 +51,13 @@ then
 	echo 'apc.enable_cli=1' >> "$php_ini_file"
 fi
 
+#mbstring
+if [ `php -r "echo (int) version_compare(PHP_VERSION, '5.6.0', '>=');"` == "1" ]
+then
+	echo 'mbstring.http_input=pass' >> "$php_ini_file"
+	echo 'mbstring.http_output=pass' >> "$php_ini_file"
+fi
+
 # redis
 # Disabled redis for now as it causes travis to fail
 # git clone git://github.com/nicolasff/phpredis.git redis
