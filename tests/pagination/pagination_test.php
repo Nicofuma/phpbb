@@ -30,8 +30,9 @@ class phpbb_pagination_pagination_test extends phpbb_template_template_test_case
 			->method('lang')
 			->will($this->returnCallback(array($this, 'return_callback_implode')));
 
+		$this->manager = new phpbb_mock_extension_manager(dirname(__FILE__) . '/', array());
 		$this->finder = new \phpbb\extension\finder(
-			new phpbb_mock_extension_manager(dirname(__FILE__) . '/', array()),
+			$this->manager,
 			new \phpbb\filesystem(),
 			dirname(__FILE__) . '/',
 			new phpbb_mock_cache()
@@ -39,9 +40,9 @@ class phpbb_pagination_pagination_test extends phpbb_template_template_test_case
 
 		$this->config = new \phpbb\config\config(array('enable_mod_rewrite' => '1'));
 		$provider = new \phpbb\controller\provider();
-		$this->provider->set_ext_finder($this->finder);
+		$provider->set_ext_finder($this->finder);
 		$provider->find(dirname(__FILE__) . '/');
-		$this->helper = new \phpbb\controller\helper($this->template, $this->user, $this->config, $provider, '', 'php');
+		$this->helper = new \phpbb\controller\helper($this->template, $this->user, $this->config, $provider, $this->manager, '', 'php');
 		$this->pagination = new \phpbb\pagination($this->template, $this->user, $this->helper);
 	}
 
