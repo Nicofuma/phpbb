@@ -14,5 +14,6 @@ class test extends PHPUnit_Framework_TestCase
 	public function __construct($name = NULL, array $data = array(), $dataName = '')
 {
 	echo(PHPUnit_Runner_Version::getVersionString());
+	echo' - ' . PHP_VERSION;
 }
 }
