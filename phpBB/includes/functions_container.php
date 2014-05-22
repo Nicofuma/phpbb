@@ -11,6 +11,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 
 /**
 * @ignore
@@ -211,6 +212,8 @@ function phpbb_create_dumped_container($config_file, array $extensions, array $p
 
 	// Lastly, we create our cached container class
 	$dumper = new PhpDumper($container);
+	$proxy_dumper = new ProxyDumper();
+	$dumper->setProxyDumper($proxy_dumper);
 	$cached_container_dump = $dumper->dump(array(
 		'class'         => 'phpbb_cache_container',
 		'base_class'    => 'Symfony\\Component\\DependencyInjection\\ContainerBuilder',
