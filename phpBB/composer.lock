@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "555ce36f7deabaa7aa84b4f8b5fa5aae",
+    "hash": "ec043aa16505b287d62e32e2557f0db5",
     "packages": [
         {
             "name": "lusitanian/oauth",
@@ -602,6 +602,55 @@
             "description": "Symfony HttpKernel Component",
             "homepage": "http://symfony.com",
             "time": "2014-09-03 09:45:27"
+        },
+        {
+            "name": "symfony/proxy-manager-bridge",
+            "version": "v2.3.19",
+            "target-dir": "Symfony/Bridge/ProxyManager",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/ProxyManagerBridge.git",
+                "reference": "3d29b445a3e01e186c169e4c3124dc542ecda685"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/ProxyManagerBridge/zipball/3d29b445a3e01e186c169e4c3124dc542ecda685",
+                "reference": "3d29b445a3e01e186c169e4c3124dc542ecda685",
+                "shasum": ""
+            },
+            "require": {
+                "ocramius/proxy-manager": ">=0.3.1,<0.4-dev",
+                "php": ">=5.3.3",
+                "symfony/dependency-injection": "~2.3"
+            },
+            "type": "symfony-bridge",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Bridge\\ProxyManager\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony ProxyManager Bridge",
+            "homepage": "http://symfony.com",
+            "time": "2014-07-07 10:13:42"
         },
         {
             "name": "symfony/routing",
@@ -2440,55 +2489,6 @@
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
             "time": "2014-08-28 09:02:24"
-        },
-        {
-            "name": "symfony/proxy-manager-bridge",
-            "version": "v2.3.19",
-            "target-dir": "Symfony/Bridge/ProxyManager",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/ProxyManagerBridge.git",
-                "reference": "3d29b445a3e01e186c169e4c3124dc542ecda685"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ProxyManagerBridge/zipball/3d29b445a3e01e186c169e4c3124dc542ecda685",
-                "reference": "3d29b445a3e01e186c169e4c3124dc542ecda685",
-                "shasum": ""
-            },
-            "require": {
-                "ocramius/proxy-manager": ">=0.3.1,<0.4-dev",
-                "php": ">=5.3.3",
-                "symfony/dependency-injection": "~2.3"
-            },
-            "type": "symfony-bridge",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Bridge\\ProxyManager\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Symfony ProxyManager Bridge",
-            "homepage": "http://symfony.com",
-            "time": "2014-07-07 10:13:42"
         }
     ],
     "aliases": [],
