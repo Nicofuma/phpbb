@@ -15,6 +15,7 @@ namespace phpbb\di;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 
 class container_builder
 {
@@ -281,6 +282,9 @@ class container_builder
 	protected function dump_container($container_filename)
 	{
 		$dumper = new PhpDumper($this->container);
+		$proxy_dumper = new ProxyDumper();
+		$dumper->setProxyDumper($proxy_dumper);
+
 		$cached_container_dump = $dumper->dump(array(
 			'class'         => 'phpbb_cache_container',
 			'base_class'    => 'Symfony\\Component\\DependencyInjection\\ContainerBuilder',
