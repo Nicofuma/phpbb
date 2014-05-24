@@ -54,7 +54,7 @@ function phpbb_end_update($cache, $config)
 require($phpbb_root_path . 'includes/startup.' . $phpEx);
 require($phpbb_root_path . 'phpbb/class_loader.' . $phpEx);
 
-$phpbb_class_loader = new \phpbb\class_loader('phpbb\\', "{$phpbb_root_path}phpbb/", $phpEx);
+$phpbb_class_loader = new \phpbb\class_loader('phpbb\\', "{$phpbb_root_path}phpbb/", $phpbb_root_path, $phpEx);
 $phpbb_class_loader->register();
 
 $phpbb_config_php_file = new \phpbb\config_php_file($phpbb_root_path, $phpEx);

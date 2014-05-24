@@ -36,7 +36,7 @@ if (isset($_GET['avatar']))
 	require($phpbb_root_path . 'includes/startup.' . $phpEx);
 
 	require($phpbb_root_path . 'phpbb/class_loader.' . $phpEx);
-	$phpbb_class_loader = new \phpbb\class_loader('phpbb\\', "{$phpbb_root_path}phpbb/", $phpEx);
+	$phpbb_class_loader = new \phpbb\class_loader('phpbb\\', "{$phpbb_root_path}phpbb/", $phpbb_root_path, $phpEx);
 	$phpbb_class_loader->register();
 
 	$phpbb_config_php_file = new \phpbb\config_php_file($phpbb_root_path, $phpEx);
@@ -53,7 +53,7 @@ if (isset($_GET['avatar']))
 	require($phpbb_root_path . 'includes/utf/utf_tools.' . $phpEx);
 
 	// Setup class loader first
-	$phpbb_class_loader_ext = new \phpbb\class_loader('\\', "{$phpbb_root_path}ext/", $phpEx);
+	$phpbb_class_loader_ext = new \phpbb\class_loader('\\', "{$phpbb_root_path}ext/", $phpbb_root_path, $phpEx);
 	$phpbb_class_loader_ext->register();
 
 	// Set up container

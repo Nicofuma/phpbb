@@ -26,7 +26,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 require($phpbb_root_path . 'includes/startup.' . $phpEx);
 require($phpbb_root_path . 'phpbb/class_loader.' . $phpEx);
 
-$phpbb_class_loader = new \phpbb\class_loader('phpbb\\', "{$phpbb_root_path}phpbb/", $phpEx);
+$phpbb_class_loader = new \phpbb\class_loader('phpbb\\', "{$phpbb_root_path}phpbb/", $phpbb_root_path, $phpEx);
 $phpbb_class_loader->register();
 
 $phpbb_config_php_file = new \phpbb\config_php_file($phpbb_root_path, $phpEx);
@@ -49,7 +49,18 @@ if ($input->hasParameterOption(array('--safe-mode')))
 }
 else
 {
-	$phpbb_class_loader_ext = new \phpbb\class_loader('\\', "{$phpbb_root_path}ext/", $phpEx);
+	$phpbb_class_loader_ext = new \phpbb\class_loader('\\', "{$phpbb_root_path}ext/", $phpbb_root_path, $phpEx);
+	$phpbb_class_loader_ext->register();
+	phpbb_load_extensions_autoloaders($phpbb_root_path);
+}
+if ($input->hasParameterOption(array('--safe-mode')))
+{
+	$phpbb_container_builder->set_use_extensions(false);
+	$phpbb_container_builder->set_dump_container(false);
+}
+else
+{
+	$phpbb_class_loader_ext = new \phpbb\class_loader('\\', "{$phpbb_root_path}ext/", $phpbb_root_path, $phpEx);
 	$phpbb_class_loader_ext->register();
 	phpbb_load_extensions_autoloaders($phpbb_root_path);
 }
