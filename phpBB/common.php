@@ -91,7 +91,7 @@ set_error_handler(defined('PHPBB_MSG_HANDLER') ? PHPBB_MSG_HANDLER : 'msg_handle
 
 if (!defined('DEBUG_CONTAINER'))
 {
-	$phpbb_class_loader->doBuildBootstrap(array(
+	$phpbb_class_loader->do_build_bootstrap(array(
 		'\\phpbb\\cache\\driver\\base',
 		'\\phpbb\\cache\\driver\\driver_interface',
 		'\\phpbb\\config\\config',
