@@ -51,6 +51,7 @@ abstract class base implements \phpbb\cache\driver\driver_interface
 			else if (strpos($filename, 'container_') === 0 ||
 				strpos($filename, 'url_matcher') === 0 ||
 				strpos($filename, 'bootstrap_') === 0 ||
+				strpos($filename, 'ProxyManagerGeneratedProxy') === 0 ||
 				strpos($filename, 'sql_') === 0 ||
 				strpos($filename, 'data_') === 0)
 			{
