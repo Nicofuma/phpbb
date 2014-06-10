@@ -20,8 +20,8 @@ class phpbb_mock_controller_helper extends \phpbb\controller\helper
 		$this->config = $config;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-		$provider->find_routing_files($manager->get_finder());
-		$this->route_collection = $provider->find($phpbb_root_path_ext)->get_routes();
+		$this->provider = $provider;
+		$this->manager = $manager;
 	}
 
 	public function get_current_url()
