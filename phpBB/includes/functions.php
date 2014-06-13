@@ -5299,6 +5299,14 @@ function garbage_collection()
 	{
 		$db->sql_close();
 	}
+
+	var_dump(\phpbb\event\dispatcher::$times);
+
+	asort(\phpbb\class_loader::$include_times);
+	var_dump(\phpbb\class_loader::$include_times);
+	$included_files = get_included_files();
+	sort($included_files);
+	var_dump($included_files);
 }
 
 /**
