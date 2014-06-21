@@ -67,9 +67,11 @@ else
 		--fpm-config "$DIR/php-fpm.conf"
 fi
 
+NGINX_LOG_ERROR=$(realpath "$DIR")/nginx.log
 # nginx
 echo "
 	server {
+		error_log $NGINX_LOG_ERROR;
 		listen	80;
 		root	$PHPBB_ROOT_PATH/;
 		index	index.php index.html;
