@@ -41,9 +41,8 @@ then
 		-vServer.Type=fastcgi \
 		-vServer.FileSocket="$APP_SOCK" \
 		-vLog.File="$HHVM_LOG"
-ls -la travis/
-sleep 2
-ls -la travis/
+		-vLog.Level=Verbose
+		sleep 3
 else
 	# php-fpm
 	PHP_FPM_BIN="$HOME/.phpenv/versions/$TRAVIS_PHP_VERSION/sbin/php-fpm"
