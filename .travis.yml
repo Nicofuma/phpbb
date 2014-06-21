@@ -25,4 +25,5 @@ script:
   - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.5' -a '$FUNCTIONAL_TESTS' != '1' -a '$DB' = 'mysqli' -a '$TRAVIS_PULL_REQUEST' != 'false' ]; then git-tools/commit-msg-hook-range.sh origin/$TRAVIS_BRANCH..FETCH_HEAD; fi"
   - ls -la travis/
   - cat travis/hhvm.log
+  - cat travis/hhvm.log.log
   - cat travis/nginx.log

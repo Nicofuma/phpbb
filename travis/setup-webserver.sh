@@ -43,6 +43,7 @@ then
 		-vLog.File="$HHVM_LOG" \
 		-v Log.Level=Verbose >"$HHVM_LOG.log" &
 		sleep 3
+	sudo chmod 777 $APP_SOCK
 else
 	# php-fpm
 	PHP_FPM_BIN="$HOME/.phpenv/versions/$TRAVIS_PHP_VERSION/sbin/php-fpm"
