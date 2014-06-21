@@ -41,7 +41,7 @@ then
 		-vServer.Type=fastcgi \
 		-vServer.FileSocket="$APP_SOCK" \
 		-vLog.File="$HHVM_LOG" \
-		-vLog.Level=Verbose
+		-vLog.Level="Verbose"
 		sleep 3
 else
 	# php-fpm
