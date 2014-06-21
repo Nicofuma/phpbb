@@ -36,7 +36,7 @@ then
 	HHVM_LOG=$(realpath "$DIR")/hhvm.log
 
 	sudo hhvm \
-		--mode deamon \
+		--mode daemon \
 		--user "$USER" \
 		-vServer.Type=fastcgi \
 		-vServer.FileSocket="$APP_SOCK" \
@@ -80,7 +80,7 @@ echo "
 		}
 	}
 " | sudo tee $NGINX_CONF > /dev/null
-ps aux
+ps aux --cols 500
 ls -la travis/
 cat $HHVM_LOG
 sudo service nginx start
