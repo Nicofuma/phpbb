@@ -36,14 +36,14 @@ then
 	HHVM_LOG=$(realpath "$DIR")/hhvm.log
 
 	sudo hhvm \
-		--mode daemon \
+		--mode server \
 		--user "$USER" \
 		-vServer.Type=fastcgi \
 		-vServer.FileSocket="$APP_SOCK" \
 		-vLog.File="$HHVM_LOG" \
-		-v Log.Level=Verbose
+		-v Log.Level=Verbose >"$HHVM_LOG.log" &
 		sleep 3
-	chmod -R 666 .
+	sudo chmod -R 666 .
 else
 	# php-fpm
 	PHP_FPM_BIN="$HOME/.phpenv/versions/$TRAVIS_PHP_VERSION/sbin/php-fpm"
