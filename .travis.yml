@@ -24,3 +24,4 @@ script:
   - sh -c "if [ '$FUNCTIONAL_TESTS' = '1' ]; then phpBB/vendor/bin/phpunit --configuration travis/phpunit-$DB-travis.xml --group functional; fi"
   - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.5' -a '$FUNCTIONAL_TESTS' != '1' -a '$DB' = 'mysqli' -a '$TRAVIS_PULL_REQUEST' != 'false' ]; then git-tools/commit-msg-hook-range.sh origin/$TRAVIS_BRANCH..FETCH_HEAD; fi"
   - ls -la travis/
+  - cat travis/hhvm.log
