@@ -40,7 +40,7 @@ then
 		--user "$USER" \
 		-vServer.Type=fastcgi \
 		-vServer.FileSocket="$APP_SOCK" \
-		-vLog.File="$HHVM_LOG"
+		-vLog.File="$HHVM_LOG" \
 		-vLog.Level=Verbose
 		sleep 3
 else
