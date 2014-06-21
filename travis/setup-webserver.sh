@@ -41,7 +41,6 @@ then
 		-vServer.Type=fastcgi \
 		-vServer.FileSocket="$APP_SOCK" \
 		-vLog.File="$HHVM_LOG"
-	sudo chmod 666 $APP_SOCK
 else
 	# php-fpm
 	PHP_FPM_BIN="$HOME/.phpenv/versions/$TRAVIS_PHP_VERSION/sbin/php-fpm"
@@ -78,5 +77,6 @@ echo "
 		}
 	}
 " | sudo tee $NGINX_CONF > /dev/null
-
+ls -la
+cat $HHVM_LOG
 sudo service nginx start
