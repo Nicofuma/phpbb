@@ -77,6 +77,6 @@ echo "
 		}
 	}
 " | sudo tee $NGINX_CONF > /dev/null
-ls -la
+ls -la travis/
 cat $HHVM_LOG
 sudo service nginx start
