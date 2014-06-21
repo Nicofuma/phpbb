@@ -36,14 +36,12 @@ then
 	HHVM_LOG=$(realpath "$DIR")/hhvm.log
 
 	sudo hhvm \
-		--mode server \
+		--mode deamon \
 		--user "$USER" \
 		-vServer.Type=fastcgi \
 		-vServer.FileSocket="$APP_SOCK" \
-		-vLog.File="$HHVM_LOG" \
-		-v Log.Level=Verbose >"$HHVM_LOG.log" &
+		-vLog.File="$HHVM_LOG"&
 		sleep 3
-	sudo chmod 777 $APP_SOCK
 else
 	# php-fpm
 	PHP_FPM_BIN="$HOME/.phpenv/versions/$TRAVIS_PHP_VERSION/sbin/php-fpm"
@@ -82,6 +80,7 @@ echo "
 		}
 	}
 " | sudo tee $NGINX_CONF > /dev/null
+ps aux
 ls -la travis/
 cat $HHVM_LOG
 sudo service nginx start
