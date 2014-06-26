@@ -83,7 +83,6 @@ require($phpbb_root_path . 'includes/functions_content.' . $phpEx);
 require($phpbb_root_path . 'includes/functions_container.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_compatibility.' . $phpEx);
 
-require($phpbb_root_path . 'includes/constants.' . $phpEx);
 require($phpbb_root_path . 'includes/utf/utf_tools.' . $phpEx);
 
 // Set PHP error handler to ours
@@ -96,7 +95,11 @@ $phpbb_class_loader_ext = new \phpbb\class_loader('\\', "{$phpbb_root_path}ext/"
 $phpbb_class_loader_ext->register();
 
 // Set up container
-$phpbb_container = phpbb_create_default_container($phpbb_root_path, $phpEx);
+$factory = new \phpbb\di\container_factory();
+$phpbb_container = $factory->get_container($phpbb_root_path, $phpEx);
+//phpbb_create_default_container($phpbb_root_path, $phpEx);
+
+require($phpbb_root_path . 'includes/constants.' . $phpEx);
 
 $phpbb_class_loader->set_cache($phpbb_container->get('cache.driver'));
 $phpbb_class_loader_ext->set_cache($phpbb_container->get('cache.driver'));
