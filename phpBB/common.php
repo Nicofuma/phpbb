@@ -105,6 +105,8 @@ $phpbb_class_loader_ext->set_cache($phpbb_container->get('cache.driver'));
 
 require($phpbb_root_path . 'includes/compatibility_globals.' . $phpEx);
 
+$phpbb_container->get('dispatcher')->dispatch('core.auto_loader');
+
 // Add own hook handler
 require($phpbb_root_path . 'includes/hooks/index.' . $phpEx);
 $phpbb_hook = new phpbb_hook(array('exit_handler', 'phpbb_user_session_handler', 'append_sid', array('\phpbb\template\template', 'display')));
