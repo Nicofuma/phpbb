@@ -90,14 +90,6 @@ class path_helper
 	}
 
 	/**
-	* Recalculate the web root path.
-	*/
-	public function reset_web_root_path()
-	{
-		$this->web_root_path = null;
-	}
-
-	/**
 	* Update a web path to the correct relative root path
 	*
 	* This replaces $phpbb_root_path . some_url with

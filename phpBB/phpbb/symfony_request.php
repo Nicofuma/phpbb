@@ -41,14 +41,4 @@ class symfony_request extends Request
 
 		parent::__construct($get_parameters, $post_parameters, array(), $cookie_parameters, $files_parameters, $server_parameters);
 	}
-
-	/**
-	* Set the value of the request_uri
-	*
-	* @param $request_uri
-	*/
-	public function set_request_uri($request_uri)
-	{
-		$this->requestUri = $request_uri;
-	}
 }

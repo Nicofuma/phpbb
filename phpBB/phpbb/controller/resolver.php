@@ -47,27 +47,19 @@ class resolver implements ControllerResolverInterface
 	protected $phpbb_root_path;
 
 	/**
-	* \phpbb\path_helper object
-	* @var \phpbb\path_helper
-	*/
-	protected $path_helper;
-
-	/**
 	* Construct method
 	*
 	* @param \phpbb\user $user User Object
 	* @param ContainerInterface $container ContainerInterface object
 	* @param string $phpbb_root_path Relative path to phpBB root
-	* @param \phpbb\path_helper $path_helper Path Helper object
 	* @param \phpbb\template\template $template
 	*/
-	public function __construct(\phpbb\user $user, ContainerInterface $container, $phpbb_root_path, \phpbb\path_helper $path_helper, \phpbb\template\template $template = null)
+	public function __construct(\phpbb\user $user, ContainerInterface $container, $phpbb_root_path, \phpbb\template\template $template = null)
 	{
 		$this->user = $user;
 		$this->container = $container;
 		$this->template = $template;
 		$this->phpbb_root_path = $phpbb_root_path;
-		$this->path_helper = $path_helper;
 	}
 
 	/**
@@ -116,33 +108,6 @@ class resolver implements ControllerResolverInterface
 			if (is_dir($this->phpbb_root_path . $controller_style_dir))
 			{
 				$this->template->set_style(array($controller_style_dir, 'styles'));
-			}
-		}
-
-		// If the request is made by ajax and if requested, fix the request_uri to use the referer.
-		// If the request has an _referer attribute it is used, otherwise we use the request header if available.
-		if ($request->isXmlHttpRequest() && $request->get('_ajax_fix_request_uri', false) && $request instanceof \phpbb\symfony_request)
-		{
-			// The web_root_path has to be reset because it is cached.
-			$this->path_helper->reset_web_root_path();
-
-			$referer = null;
-			if ($request->query->has('_referer'))
-			{
-				$referer = $request->query->get('_referer');
-			}
-			else if ($request->headers->has('Referer'))
-			{
-				$header_referer = $request->headers->get('Referer');
-				if ($header_referer != '')
-				{
-					$referer = $header_referer;
-				}
-			}
-
-			if ($referer !== null)
-			{
-				$request->set_request_uri($referer);
 			}
 		}
 
