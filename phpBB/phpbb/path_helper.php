@@ -104,7 +104,13 @@ class path_helper
 		{
 			$path = substr($path, strlen($this->phpbb_root_path));
 
-			return $this->filesystem->clean_path($this->get_web_root_path() . $path);
+			$web_root_path = $this->get_web_root_path();
+			if (substr($web_root_path, -8) === 'app.php/' && substr($path, 0, 7) === 'app.php')
+			{
+				$path = substr($path, 8);
+			}
+
+			return $this->filesystem->clean_path($web_root_path . $path);
 		}
 
 		return $path;
@@ -199,7 +205,7 @@ class path_helper
 		{
 			$referer_web_root_path = $this->get_web_root_path_from_ajax_referer(
 				$this->symfony_request->get('_referer'),
-				$this->symfony_request->getUriForPath('')
+				$this->symfony_request->getSchemeAndHttpHost() . $this->symfony_request->getBasePath()
 			);
 			return $this->web_root_path = $this->phpbb_root_path . $referer_web_root_path;
 		}
@@ -247,7 +253,7 @@ class path_helper
 				$relative_referer_path = substr($relative_referer_path, 0, $has_params);
 			}
 			$corrections = substr_count($relative_referer_path, '/');
-			return $this->phpbb_root_path . str_repeat('../', $corrections);
+			return $this->phpbb_root_path . str_repeat('../', $corrections - 1);
 		}
 
 		// If not, it's a bit more complicated. We go to the parent directory
