@@ -150,31 +150,27 @@ pecl download pdo_oci
 tar xvzf PDO_OCI*.tgz
 cd PDO_OCI*
 sh -c "cat >config.m4.patch" <<"END"
-*** config.m4 2005-09-24 17:23:24.000000000 -0600
---- /home/myuser/Desktop/PDO_OCI-1.0/config.m4 2009-07-07 17:32:14.000000000 -0600
-***************
-*** 7,12 ****
---- 7,14 ----
-if test -s "$PDO_OCI_DIR/orainst/unix.rgs"; then
-PDO_OCI_VERSION=`grep '"ocommon"' $PDO_OCI_DIR/orainst/unix.rgs | sed 's/[ ][ ]*/:/g' | cut -d: -f 6 | cut -c 2-4`
-test -z "$PDO_OCI_VERSION" && PDO_OCI_VERSION=7.3
-+ elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.11.2; then
-+ PDO_OCI_VERSION=11.2
-elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.10.1; then
-PDO_OCI_VERSION=10.1
-elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.9.0; then
-***************
-*** 119,124 ****
---- 121,129 ----
-10.2)
-PHP_ADD_LIBRARY(clntsh, 1, PDO_OCI_SHARED_LIBADD)
-;;
-+ 11.2)
-+ PHP_ADD_LIBRARY(clntsh, 1, PDO_OCI_SHARED_LIBADD)
-+ ;;
-*)
-AC_MSG_ERROR(Unsupported Oracle version! $PDO_OCI_VERSION)
-;;
+--- config.m4
++++ config.m4
+@@ -7,6 +7,8 @@ AC_DEFUN([AC_PDO_OCI_VERSION],[
+   if test -s "$PDO_OCI_DIR/orainst/unix.rgs"; then
+     PDO_OCI_VERSION=`grep '"ocommon"' $PDO_OCI_DIR/orainst/unix.rgs | sed 's/[ ][ ]*/:/g' | cut -d: -f 6 | cut -c 2-4`
+     test -z "$PDO_OCI_VERSION" && PDO_OCI_VERSION=7.3
++  elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.11.2; then
++    PDO_OCI_VERSION=11.2
+   elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.10.1; then
+     PDO_OCI_VERSION=10.1
+   elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.9.0; then
+@@ -119,6 +121,9 @@ You need to tell me where to find your oracle SDK, or set ORACLE_HOME.
+     10.2)
+       PHP_ADD_LIBRARY(clntsh, 1, PDO_OCI_SHARED_LIBADD)
+       ;;
++    11.2)
++      PHP_ADD_LIBRARY(clntsh, 1, PDO_OCI_SHARED_LIBADD)
++      ;;
+     *)
+       AC_MSG_ERROR(Unsupported Oracle version! $PDO_OCI_VERSION)
+       ;;
 END
 set +x
 patch --dry-run -i config.m4.patch && patch -i config.m4.patch &&
