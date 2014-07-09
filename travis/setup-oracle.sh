@@ -120,6 +120,9 @@ free_restore
 # build php module
 git clone https://github.com/DeepDiver1975/oracle_instant_client_for_ubuntu_64bit.git instantclient
 cd instantclient
+
+INSTANTCLIENT_PATH=$(pwd)
+
 sudo bash -c 'printf "\n" | python system_setup.py'
 
 sudo mkdir -p /usr/lib/oracle/11.2/client64/rdbms/
@@ -127,6 +130,64 @@ sudo ln -s /usr/include/oracle/11.2/client64/ /usr/lib/oracle/11.2/client64/rdbm
 
 sudo apt-get install -qq --force-yes libaio1
 printf "/usr/lib/oracle/11.2/client64\n" | pecl install oci8
+
+# PDO
+ln -s /usr/include/php5 /usr/include/php
+mkdir -p include/oracle/11.2/
+cd include/oracle/11.2/
+ln -s ../../../sdk/include client
+cd -
+
+mkdir -p lib/oracle/11.2/client
+cd lib/oracle/11.2/client
+ln -s ../../../../ lib
+cd -
+
+pecl channel-update pear.php.net
+mkdir -p /tmp/pear/download/
+cd /tmp/pear/download/
+pecl download pdo_oci
+tar xvf PDO_OCI*.tgz
+cd PDO_OCI*
+cat <<END >config.m4.patch
+*** config.m4 2005-09-24 17:23:24.000000000 -0600
+--- /home/myuser/Desktop/PDO_OCI-1.0/config.m4 2009-07-07 17:32:14.000000000 -0600
+***************
+*** 7,12 ****
+--- 7,14 ----
+if test -s "$PDO_OCI_DIR/orainst/unix.rgs"; then
+PDO_OCI_VERSION=`grep '"ocommon"' $PDO_OCI_DIR/orainst/unix.rgs | sed 's/[ ][ ]*/:/g' | cut -d: -f 6 | cut -c 2-4`
+test -z "$PDO_OCI_VERSION" && PDO_OCI_VERSION=7.3
++ elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.11.2; then
++ PDO_OCI_VERSION=11.2
+elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.10.1; then
+PDO_OCI_VERSION=10.1
+elif test -f $PDO_OCI_DIR/lib/libclntsh.$SHLIB_SUFFIX_NAME.9.0; then
+***************
+*** 119,124 ****
+--- 121,129 ----
+10.2)
+PHP_ADD_LIBRARY(clntsh, 1, PDO_OCI_SHARED_LIBADD)
+;;
++ 11.2)
++ PHP_ADD_LIBRARY(clntsh, 1, PDO_OCI_SHARED_LIBADD)
++ ;;
+*)
+AC_MSG_ERROR(Unsupported Oracle version! $PDO_OCI_VERSION)
+;;
+END
+
+patch --dry-run -i config.m4.patch && patch -i config.m4.patch &&
+phpize ORACLE_HOME=$INSTANTCLIENT_PATH
+
+./configure --with-pdo-oci=instantclient,$INSTANTCLIENT_PATH,11.2
+ls -la ~/.phpenv/versions/$(phpenv version-name)/
+ls -la ~/.phpenv/versions/$(phpenv version-name)/usr/lib/
+ls -la ~/.phpenv/versions/$(phpenv version-name)/usr/lib/php5
+
+make && make test && make install && mv modules/pdo_oci.so ~/.phpenv/versions/$(phpenv version-name)/usr/lib/php5/20090626/
+
+# PDO END
 
 cat ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
