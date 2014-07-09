@@ -178,10 +178,9 @@ phpize ORACLE_HOME=$INSTANTCLIENT_PATH
 ls -la
 ./configure --with-pdo-oci=instantclient,$INSTANTCLIENT_PATH,11.2
 ls -la ~/.phpenv/versions/$(phpenv version-name)/
-ls -la ~/.phpenv/versions/$(phpenv version-name)/usr/lib/
-ls -la ~/.phpenv/versions/$(phpenv version-name)/usr/lib/php5
+ls -la ~/.phpenv/versions/$(phpenv version-name)/php
 
-make && make test && make install && mv modules/pdo_oci.so ~/.phpenv/versions/$(phpenv version-name)/usr/lib/php5/20090626/
+make && make test && make install && mv modules/pdo_oci.so ~/.phpenv/versions/$(phpenv version-name)/php/ext/
 
 # PDO END
 
