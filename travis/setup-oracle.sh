@@ -146,8 +146,8 @@ cd -
 pecl channel-update pear.php.net
 mkdir -p /tmp/pear/download/
 cd /tmp/pear/download/
-pecl download pdo_oci
-tar xvf PDO_OCI*.tgz
+wget http://pecl.php.net/get/PDO_OCI-1.0.tgz
+tar xvzf PDO_OCI*.tgz
 cd PDO_OCI*
 cat <<END >config.m4.patch
 *** config.m4 2005-09-24 17:23:24.000000000 -0600
