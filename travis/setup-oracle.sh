@@ -146,7 +146,7 @@ cd -
 pecl channel-update pear.php.net
 mkdir -p /tmp/pear/download/
 cd /tmp/pear/download/
-wget http://pecl.php.net/get/PDO_OCI-1.0.tgz
+pecl download pdo_oci
 tar xvzf PDO_OCI*.tgz
 cd PDO_OCI*
 sh -c "cat >config.m4.patch" <<"END"
@@ -176,10 +176,10 @@ PHP_ADD_LIBRARY(clntsh, 1, PDO_OCI_SHARED_LIBADD)
 AC_MSG_ERROR(Unsupported Oracle version! $PDO_OCI_VERSION)
 ;;
 END
-
+set +x
 patch --dry-run -i config.m4.patch && patch -i config.m4.patch &&
 phpize ORACLE_HOME=$INSTANTCLIENT_PATH
-
+ls -la
 ./configure --with-pdo-oci=instantclient,$INSTANTCLIENT_PATH,11.2
 ls -la ~/.phpenv/versions/$(phpenv version-name)/
 ls -la ~/.phpenv/versions/$(phpenv version-name)/usr/lib/
