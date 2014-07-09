@@ -176,11 +176,11 @@ set +x
 patch --dry-run -i config.m4.patch && patch -i config.m4.patch &&
 phpize ORACLE_HOME=$INSTANTCLIENT_PATH
 ls -la
-./configure --with-pdo-oci=instantclient,$INSTANTCLIENT_PATH,11.2
+./configure --with-oci8=/usr/lib/oracle/11.2/client64
 ls -la ~/.phpenv/versions/$(phpenv version-name)/
-ls -la ~/.phpenv/versions/$(phpenv version-name)/php
+ls -la ~/.phpenv/versions/$(phpenv version-name)/lib/php/extensions/
 
-make && make test && make install && mv modules/pdo_oci.so ~/.phpenv/versions/$(phpenv version-name)/php/ext/
+make && make test && make install && mv modules/pdo_oci.so ~/.phpenv/versions/$(phpenv version-name)/lib/php/extensions/
 
 # PDO END
 
