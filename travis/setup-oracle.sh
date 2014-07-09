@@ -149,7 +149,7 @@ cd /tmp/pear/download/
 wget http://pecl.php.net/get/PDO_OCI-1.0.tgz
 tar xvzf PDO_OCI*.tgz
 cd PDO_OCI*
-cat <<END >config.m4.patch
+sh -c "cat >config.m4.patch" <<"END"
 *** config.m4 2005-09-24 17:23:24.000000000 -0600
 --- /home/myuser/Desktop/PDO_OCI-1.0/config.m4 2009-07-07 17:32:14.000000000 -0600
 ***************
