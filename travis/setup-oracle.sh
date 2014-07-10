@@ -172,15 +172,30 @@ sh -c "cat >config.m4.patch" <<"END"
        AC_MSG_ERROR(Unsupported Oracle version! $PDO_OCI_VERSION)
        ;;
 END
-set +x
+sh -c "cat >pdo_oci.c.patch" <<"END"
+--- pdo_oci.c
++++ pdo_oci.c
+@@ -31,7 +31,7 @@
+ #include "php_pdo_oci_int.h"
+
+ /* {{{ pdo_oci_functions[] */
+-function_entry pdo_oci_functions[] = {
++static zend_function_entry pdo_oci_functions[] = {
+ 	{NULL, NULL, NULL}
+ };
+ /* }}} */
+END
+
 patch --dry-run -i config.m4.patch && patch -i config.m4.patch &&
+patch --dry-run -i pdo_oci.c.patch && patch -i pdo_oci.c.patch &&
+
 phpize ORACLE_HOME=$INSTANTCLIENT_PATH
 ls -la
 ./configure --with-oci8=/usr/lib/oracle/11.2/client64
 ls -la ~/.phpenv/versions/$(phpenv version-name)/
 ls -la ~/.phpenv/versions/$(phpenv version-name)/lib/php/extensions/
 
-make && make test && make install && mv modules/pdo_oci.so ~/.phpenv/versions/$(phpenv version-name)/lib/php/extensions/
+make && make test && make install && mv modules/pdo_oci.so ~/.phpenv/versions/$(phpenv version-name)/lib/php/extensions/*/
 
 # PDO END
 
