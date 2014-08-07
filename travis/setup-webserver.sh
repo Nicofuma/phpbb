@@ -28,6 +28,8 @@ PHPBB_ROOT_PATH=$(realpath "$DIR/../phpBB")
 NGINX_CONF="/etc/nginx/sites-enabled/default"
 APP_SOCK=$(realpath "$DIR")/php-app.sock
 
+umask 0000
+
 if [ "$TRAVIS_PHP_VERSION" = 'hhvm' ]
 then
 	# Upgrade to a recent stable version of HHVM
