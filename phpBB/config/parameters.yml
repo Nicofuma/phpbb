@@ -1,3 +1,0 @@
-parameters:
-    core.disable_super_globals: true
-    datetime.class: \phpbb\datetime
