@@ -55,7 +55,7 @@ class provider
 	{
 		// We hardcode the path to the core config directory
 		// because the finder cannot find it
-		$this->routing_files = array_merge($this->routing_files, array('config/routing.yml'), array_keys($finder
+		$this->routing_files = array_merge($this->routing_files, array('config/' . PHPBB_ENVIRONMENT . '/routing.yml'), array_keys($finder
 				->directory('/config')
 				->suffix('routing.yml')
 				->find()
