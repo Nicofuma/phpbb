@@ -28,13 +28,18 @@ class phpbb_controller_controller_test extends phpbb_test_case
 					'ext_active' => '1',
 					'ext_path' => 'ext/vendor2/foo/',
 				),
+				'vendor2/bar' => array(
+					'ext_name' => 'vendor2/bar',
+					'ext_active' => '1',
+					'ext_path' => 'ext/vendor2/bar/',
+				),
 			));
 	}
 
 	public function test_provider()
 	{
 		$provider = new \phpbb\controller\provider();
-		$provider->find_routing_files($this->extension_manager->get_finder());
+		$provider->find_routing_files($this->extension_manager->all_enabled());
 		$routes = $provider->find(__DIR__)->get_routes();
 
 		// This will need to be updated if any new routes are defined
@@ -46,6 +51,9 @@ class phpbb_controller_controller_test extends phpbb_test_case
 
 		$this->assertInstanceOf('Symfony\Component\Routing\Route', $routes->get('controller2'));
 		$this->assertEquals('/foo/bar', $routes->get('controller2')->getPath());
+
+		$this->assertInstanceOf('Symfony\Component\Routing\Route', $routes->get('controller3'));
+		$this->assertEquals('/bar', $routes->get('controller3')->getPath());
 
 		$this->assertNull($routes->get('controller_noroute'));
 	}

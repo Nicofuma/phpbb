@@ -48,18 +48,31 @@ class provider
 	/**
 	* Find the list of routing files
 	*
-	* @param \phpbb\finder $finder
+	* @param array $paths Array of paths where to look for routing files.
 	* @return null
 	*/
-	public function find_routing_files(\phpbb\finder $finder)
+	public function find_routing_files(array $paths)
 	{
-		// We hardcode the path to the core config directory
-		// because the finder cannot find it
-		$this->routing_files = array_merge($this->routing_files, array('config/' . PHPBB_ENVIRONMENT . '/routing.yml'), array_keys($finder
-				->directory('/config')
-				->suffix('routing.yml')
-				->find()
-		));
+		$this->routing_files = array('config/' . PHPBB_ENVIRONMENT . '/routing.yml');
+
+		foreach ($paths as $path)
+		{
+			if (file_exists($path . 'config/' . PHPBB_ENVIRONMENT . '/routing.yml'))
+			{
+				$this->routing_files[] = $path . 'config/' . PHPBB_ENVIRONMENT . '/routing.yml';
+			}
+			else if (!is_dir($path . 'config/' . PHPBB_ENVIRONMENT))
+			{
+				if (file_exists($path . 'config/default/routing.yml'))
+				{
+					$this->routing_files[] = $path . 'config/default/routing.yml';
+				}
+				else if (!is_dir($path . 'config/default') && file_exists($path . '/config/routing.yml'))
+				{
+					$this->routing_files[] = $path . '/config/routing.yml';
+				}
+			}
+		}
 	}
 
 	/**

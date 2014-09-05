@@ -113,14 +113,8 @@ abstract class phpbb_controller_common_helper_route extends phpbb_test_case
 			)
 		);
 
-		$finder = new \phpbb\finder(
-			new \phpbb\filesystem(),
-			dirname(__FILE__) . '/',
-			new phpbb_mock_cache()
-		);
-		$finder->set_extensions(array_keys($this->extension_manager->all_enabled()));
 		$this->provider = new \phpbb\controller\provider();
-		$this->provider->find_routing_files($finder);
+		$this->provider->find_routing_files($this->extension_manager->all_enabled());
 		$this->provider->find(dirname(__FILE__) . '/');
 		// Set correct current phpBB root path
 		$this->root_path = $this->get_phpbb_root_path();
