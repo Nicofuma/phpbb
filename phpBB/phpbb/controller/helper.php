@@ -84,7 +84,7 @@ class helper
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 		$provider->find_routing_files($manager->all_enabled());
-		$this->route_collection = $provider->find($phpbb_root_path)->get_routes();
+		$this->route_collection = $provider->find()->get_routes();
 	}
 
 	/**

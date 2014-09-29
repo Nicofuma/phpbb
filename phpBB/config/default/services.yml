@@ -115,6 +115,8 @@ services:
 
     controller.provider:
         class: phpbb\controller\provider
+        arguments:
+            - %core.root_path%
         calls:
             - [find, [%core.root_path%]]
 

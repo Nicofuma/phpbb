@@ -35,14 +35,22 @@ class provider
 	protected $routes;
 
 	/**
+	 * phpBB root path
+	 * @var string
+	 */
+	protected $phpbb_root_path;
+
+	/**
 	* Construct method
 	*
+	* @param string $phpbb_root_path phpBB root path
 	* @param array $routing_files Array of strings containing paths
 	*							to YAML files holding route information
 	*/
-	public function __construct($routing_files = array())
+	public function __construct($phpbb_root_path, $routing_files = array())
 	{
 		$this->routing_files = $routing_files;
+		$this->phpbb_root_path = $phpbb_root_path;
 	}
 
 	/**
@@ -53,7 +61,7 @@ class provider
 	*/
 	public function find_routing_files(array $paths)
 	{
-		$this->routing_files = array('config/' . PHPBB_ENVIRONMENT . '/routing.yml');
+		$this->routing_files = array($this->phpbb_root_path . 'config/' . PHPBB_ENVIRONMENT . '/routing.yml');
 
 		foreach ($paths as $path)
 		{
@@ -67,9 +75,9 @@ class provider
 				{
 					$this->routing_files[] = $path . 'config/default/routing.yml';
 				}
-				else if (!is_dir($path . 'config/default') && file_exists($path . '/config/routing.yml'))
+				else if (!is_dir($path . 'config/default') && file_exists($path . 'config/routing.yml'))
 				{
-					$this->routing_files[] = $path . '/config/routing.yml';
+					$this->routing_files[] = $path . 'config/routing.yml';
 				}
 			}
 		}
