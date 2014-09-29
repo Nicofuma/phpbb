@@ -47,7 +47,7 @@ class provider
 	* @param array $routing_files Array of strings containing paths
 	*							to YAML files holding route information
 	*/
-	public function __construct($phpbb_root_path, $routing_files = array())
+	public function __construct($phpbb_root_path = '', $routing_files = array())
 	{
 		$this->routing_files = $routing_files;
 		$this->phpbb_root_path = $phpbb_root_path;
