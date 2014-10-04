@@ -430,12 +430,12 @@ function phpbb_create_config_file_data($data, $dbms, $debug = false, $debug_cont
 	$config_data .= "// phpBB 3.1.x auto-generated configuration file\n// Do not change anything in this file!\n";
 
 	$config_data_array = array(
-		'dbms'			=> $dbms,
+		/*'dbms'			=> $dbms,
 		'dbhost'		=> $data['dbhost'],
 		'dbport'		=> $data['dbport'],
 		'dbname'		=> $data['dbname'],
 		'dbuser'		=> $data['dbuser'],
-		'dbpasswd'		=> htmlspecialchars_decode($data['dbpasswd']),
+		'dbpasswd'		=> htmlspecialchars_decode($data['dbpasswd']),*/
 		'table_prefix'	=> $data['table_prefix'],
 
 		'phpbb_adm_relative_path'	=> 'adm/',
@@ -451,7 +451,11 @@ function phpbb_create_config_file_data($data, $dbms, $debug = false, $debug_cont
 	$config_data .= "\n@define('PHPBB_INSTALLED', true);\n";
 	$config_data .= "// @define('PHPBB_DISPLAY_LOAD_TIME', true);\n";
 
-	if ($debug)
+	if ($debug_test)
+	{
+		$config_data .= "@define('PHPBB_ENVIRONMENT', 'test');\n";
+	}
+	else if ($debug)
 	{
 		$config_data .= "@define('PHPBB_ENVIRONMENT', 'development');\n";
 	}
@@ -476,6 +480,32 @@ function phpbb_create_config_file_data($data, $dbms, $debug = false, $debug_cont
 	}
 
 	return $config_data;
+}
+
+/**
+ * Creates the output to be stored in a phpBB db.yml file
+ *
+ * @param	array	$data Array containing the database connection information
+ * @param	string	$dbms The name of the DBAL class to use
+ * @return	string	The output to write to the file
+ */
+function phpbb_create_db_yaml_file_data($data, $dbms)
+{
+	$db_data_array = array(
+		'parameters' => array(
+			'dbal.driver.class'	=> $dbms,
+			'dbal.dbhost'		=> $data['dbhost'],
+			'dbal.dbport'		=> $data['dbport'],
+			'dbal.dbname'		=> $data['dbname'],
+			'dbal.dbuser'		=> $data['dbuser'],
+			'dbal.dbpasswd'		=> htmlspecialchars_decode($data['dbpasswd']),
+			'dbal.new_link'		=> false,
+			'core.table_prefix'	=> $data['table_prefix'],
+		),
+	);
+
+	$dumper = new \Symfony\Component\Yaml\Dumper();
+	return $dumper->dump($db_data_array, 2);
 }
 
 /**

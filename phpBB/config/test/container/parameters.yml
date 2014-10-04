@@ -1,0 +1,2 @@
+imports:
+    - { resource: ../../development/container/parameters.yml }

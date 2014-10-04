@@ -121,7 +121,6 @@ $phpbb_container_builder = new \phpbb\di\container_builder($phpbb_config_php_fil
 $phpbb_container_builder->set_use_extensions(false);
 $phpbb_container_builder->set_dump_container(false);
 $phpbb_container_builder->set_use_custom_pass(false);
-$phpbb_container_builder->set_inject_config(false);
 $phpbb_container_builder->set_compile_container(false);
 
 $other_config_path = $phpbb_root_path . 'install/update/new/config/';

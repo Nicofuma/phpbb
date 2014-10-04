@@ -263,6 +263,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 		self::recreate_database(self::$config);
 
 		$config_file = $phpbb_root_path . "config.$phpEx";
+		$db_yml_file = $phpbb_root_path . 'config/' . PHPBB_ENVIRONMENT . '/db.yml';
 		$config_file_dev = $phpbb_root_path . "config_dev.$phpEx";
 		$config_file_test = $phpbb_root_path . "config_test.$phpEx";
 
@@ -276,6 +277,11 @@ class phpbb_functional_test_case extends phpbb_test_case
 			{
 				unlink($config_file);
 			}
+		}
+
+		if (file_exists($db_yml_file))
+		{
+			unlink($db_yml_file);
 		}
 
 		self::$cookieJar = new CookieJar;
@@ -344,6 +350,12 @@ class phpbb_functional_test_case extends phpbb_test_case
 		// in order to get the DEBUG constants defined.
 		$config_php_data = phpbb_create_config_file_data(self::$config, self::$config['dbms'], true, false, true);
 		$config_created = file_put_contents($config_file, $config_php_data) !== false;
+		if (!$config_created)
+		{
+			self::markTestSkipped("Could not write $config_file file.");
+		}
+		$db_yml_data = phpbb_create_db_yaml_file_data(self::$config, self::$config['dbms']);
+		$config_created = file_put_contents($db_yml_file, $db_yml_data) !== false;
 		if (!$config_created)
 		{
 			self::markTestSkipped("Could not write $config_file file.");

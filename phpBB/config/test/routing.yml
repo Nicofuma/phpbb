@@ -1,0 +1,2 @@
+core.default:
+    resource: "../development/routing.yml"

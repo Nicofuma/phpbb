@@ -119,16 +119,6 @@ namespace
 			$this->assertFalse($container->isFrozen());
 		}
 
-		public function test_inject_config()
-		{
-			$this->builder->set_inject_config(false);
-			$container = $this->builder->get_container();
-			$this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerBuilder', $container);
-
-			// Checks inject_config
-			$this->assertFalse($container->hasParameter('dbal.dbhost'));
-		}
-
 		public function test_set_config_path()
 		{
 			$this->builder->set_config_path($this->phpbb_root_path . 'fixtures/other_config/');

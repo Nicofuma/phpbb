@@ -1,0 +1,9 @@
+parameters:
+    dbal.driver.class: phpbb\db\driver\container_mock
+    dbal.dbhost: 127.0.0.1
+    dbal.dbport: ~
+    dbal.dbname: phpbb
+    dbal.dbuser: root
+    dbal.dbpasswd: ~
+    dbal.new_link: false
+    core.table_prefix: phpbb_

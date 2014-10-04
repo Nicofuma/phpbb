@@ -52,13 +52,6 @@ class container_builder
 	protected $installed_exts = null;
 
 	/**
-	* Indicates whether the php config file should be injected into the container (default to true).
-	*
-	* @var bool
-	*/
-	protected $inject_config = true;
-
-	/**
 	* Indicates whether extensions should be used (default to true).
 	*
 	* @var bool
@@ -126,6 +119,20 @@ class container_builder
 	protected $cache_dir;
 
 	/**
+	 * Current environment
+	 *
+	 * @var string
+	 */
+	protected $environment;
+
+	/**
+	 * Indicates wether or not debug is enabled
+	 *
+	 * @var bool
+	 */
+	protected $debug;
+
+	/**
 	* Constructor
 	*
 	* @param \phpbb\config_php_file $config_php_file
@@ -137,6 +144,8 @@ class container_builder
 		$this->config_php_file = $config_php_file;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
+		$this->environment = PHPBB_ENVIRONMENT;
+		$this->debug = DEBUG;
 	}
 
 	/**
@@ -155,30 +164,12 @@ class container_builder
 		}
 		else
 		{
-			$container_extensions = array(new \phpbb\di\extension\core($this->get_config_path()));
+			$this->container = new ContainerBuilder(new ParameterBag($this->get_core_parameters()));
 
-			if ($this->use_extensions)
-			{
-				$installed_exts = $this->get_installed_extensions();
-				foreach ($installed_exts as $ext_name => $path)
-				{
-					$extension_class = '\\' . str_replace('/', '\\', $ext_name) . '\\di\extension';
+			$loader = new YamlFileLoader($this->container, new FileLocator(phpbb_realpath($this->get_config_path())));
+			$loader->load($this->environment . '/db.yml');
 
-					if (!class_exists($extension_class))
-					{
-						$extension_class = '\phpbb\extension\di\extension_base';
-					}
-
-					$container_extensions[] = new $extension_class($ext_name, $path);
-				}
-			}
-
-			if ($this->inject_config)
-			{
-				$container_extensions[] = new \phpbb\di\extension\config($this->config_php_file);
-			}
-
-			$this->container = $this->create_container($container_extensions);
+			$this->register_extensions();
 
 			if ($this->use_custom_pass)
 			{
@@ -192,8 +183,7 @@ class container_builder
 				}
 			}
 
-			$loader = new YamlFileLoader($this->container, new FileLocator(phpbb_realpath($this->get_config_path())));
-			$loader->load(PHPBB_ENVIRONMENT . '/config.yml');
+			$loader->load($this->environment . '/config.yml');
 
 			$this->inject_custom_parameters();
 
@@ -246,16 +236,6 @@ class container_builder
 	public function set_use_kernel_pass($use_kernel_pass)
 	{
 		$this->use_kernel_pass = $use_kernel_pass;
-	}
-
-	/**
-	* Set if the php config file should be injecting into the container.
-	*
-	* @param bool $inject_config
-	*/
-	public function set_inject_config($inject_config)
-	{
-		$this->inject_config = $inject_config;
 	}
 
 	/**
@@ -327,7 +307,7 @@ class container_builder
 	 */
 	protected function get_cache_dir()
 	{
-		return $this->cache_dir ?: $this->phpbb_root_path . 'cache/' . PHPBB_ENVIRONMENT . '/';
+		return $this->cache_dir ?: $this->phpbb_root_path . 'cache/' . $this->environment . '/';
 	}
 
 	/**
@@ -366,15 +346,15 @@ class container_builder
 	{
 		if ($this->dbal_connection === null)
 		{
-			$dbal_driver_class = $this->config_php_file->convert_30_dbms_to_31($this->config_php_file->get('dbms'));
+			$dbal_driver_class = $this->container->getParameter('dbal.driver.class');
 			$this->dbal_connection = new $dbal_driver_class();
 			$this->dbal_connection->sql_connect(
-				$this->config_php_file->get('dbhost'),
-				$this->config_php_file->get('dbuser'),
-				$this->config_php_file->get('dbpasswd'),
-				$this->config_php_file->get('dbname'),
-				$this->config_php_file->get('dbport'),
-				defined('PHPBB_DB_NEW_LINK') && PHPBB_DB_NEW_LINK
+				$this->container->getParameter('dbal.dbhost'),
+				$this->container->getParameter('dbal.dbuser'),
+				$this->container->getParameter('dbal.dbpasswd'),
+				$this->container->getParameter('dbal.dbname'),
+				$this->container->getParameter('dbal.dbport'),
+				$this->container->getParameter('dbal.new_link')
 			);
 		}
 
@@ -409,27 +389,39 @@ class container_builder
 	}
 
 	/**
-	* Create the ContainerBuilder object
-	*
-	* @param array $extensions Array of Container extension objects
-	* @return ContainerBuilder object
-	*/
-	protected function create_container(array $extensions)
+	 * Registers the container extensions.
+	 */
+	protected function register_extensions()
 	{
-		$container = new ContainerBuilder(new ParameterBag($this->get_core_parameters()));
+		$extensions = array(new \phpbb\di\extension\core($this->get_config_path()));
+
+		if ($this->use_extensions)
+		{
+			$installed_exts = $this->get_installed_extensions();
+			foreach ($installed_exts as $ext_name => $path)
+			{
+				$extension_class = '\\' . str_replace('/', '\\', $ext_name) . '\\di\extension';
+
+				if (!class_exists($extension_class))
+				{
+					$extension_class = '\phpbb\extension\di\extension_base';
+				}
+
+				$extensions[] = new $extension_class($ext_name, $path);
+			}
+		}
+
+		$extensions[] = new \phpbb\di\extension\config($this->config_php_file);
 
 		$extensions_alias = array();
 
 		foreach ($extensions as $extension)
 		{
-			$container->registerExtension($extension);
+			$this->container->registerExtension($extension);
 			$extensions_alias[] = $extension->getAlias();
-			//$container->loadFromExtension($extension->getAlias());
 		}
 
-		$container->getCompilerPassConfig()->setMergePass(new MergeExtensionConfigurationPass($extensions_alias));
-
-		return $container;
+		$this->container->getCompilerPassConfig()->setMergePass(new MergeExtensionConfigurationPass($extensions_alias));
 	}
 
 	/**
@@ -457,8 +449,8 @@ class container_builder
 			array(
 				'core.root_path'     => $this->phpbb_root_path,
 				'core.php_ext'       => $this->php_ext,
-				'core.environment'   => PHPBB_ENVIRONMENT,
-				'core.debug'         => DEBUG,
+				'core.environment'   => $this->environment,
+				'core.debug'         => $this->debug,
 			),
 			$this->get_env_parameters()
 		);

@@ -1,0 +1,9 @@
+parameters:
+    dbal.driver.class: phpbb\db\driver\sqlite3
+    dbal.dbhost: 'C:\Users\Tristan\Documents\GitHub\phpbb\tests/../../phpbb_unit_tests.sqlite3'
+    dbal.dbport: ''
+    dbal.dbname: ''
+    dbal.dbuser: ''
+    dbal.dbpasswd: ''
+    dbal.new_link: false
+    core.table_prefix: phpbb_
