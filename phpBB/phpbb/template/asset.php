@@ -141,7 +141,7 @@ class asset
 	*/
 	public function get_path()
 	{
-		return isset($this->components['path']) ? $this->components['path'] : '';
+		return isset($this->components['path']) ? str_replace('../theme/', '', $this->components['path']) : '';
 	}
 
 	/**

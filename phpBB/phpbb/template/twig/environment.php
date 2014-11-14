@@ -13,6 +13,8 @@
 
 namespace phpbb\template\twig;
 
+use \Symfony\Component\DependencyInjection\ContainerInterface;
+
 class environment extends \Twig_Environment
 {
 	/** @var \phpbb\config\config */
@@ -21,7 +23,7 @@ class environment extends \Twig_Environment
 	/** @var \phpbb\path_helper */
 	protected $phpbb_path_helper;
 
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+	/** @var ContainerInterface */
 	protected $container;
 
 	/** @var \phpbb\extension\manager */
@@ -33,21 +35,20 @@ class environment extends \Twig_Environment
 	/** @var string */
 	protected $web_root_path;
 
-	/** @var array **/
-	protected $namespace_look_up_order = array('__main__');
-
 	/**
-	* Constructor
-	*
-	* @param \phpbb\config\config $phpbb_config The phpBB configuration
-	* @param \phpbb\path_helper $path_helper phpBB path helper
-	* @param \Symfony\Component\DependencyInjection\ContainerInterface $container The dependency injection container
-	* @param string $cache_path The path to the cache directory
-	* @param \phpbb\extension\manager $extension_manager phpBB extension manager
-	* @param \Twig_LoaderInterface $loader Twig loader interface
-	* @param array $options Array of options to pass to Twig
-	*/
-	public function __construct($phpbb_config, \phpbb\path_helper $path_helper, \Symfony\Component\DependencyInjection\ContainerInterface $container, $cache_path, \phpbb\extension\manager $extension_manager = null, \Twig_LoaderInterface $loader = null, $options = array())
+	 * Constructor
+	 *
+	 * @param \phpbb\config\config		$phpbb_config		The phpBB configuration
+	 * @param \phpbb\path_helper		$path_helper		phpBB path helper
+	 * @param ContainerInterface		$container			The dependency injection container
+	 * @param loader					$phpbb_loader		phpBB Twig template loader
+	 * @param string					$cache_path			The path to the cache directory
+	 * @param \phpbb\extension\manager	$extension_manager	phpBB extension manager
+	 * @param array|\ArrayAccess		$loaders			Twig loaders
+	 * @param array|\ArrayAccess		$extensions			Twig extensions
+	 * @param array						$options			Array of options to pass to Twig
+	 */
+	public function __construct($phpbb_config, \phpbb\path_helper $path_helper, ContainerInterface $container, loader $phpbb_loader, $cache_path, \phpbb\extension\manager $extension_manager = null, $loaders = array(), $extensions = array(), $options = array())
 	{
 		$this->phpbb_config = $phpbb_config;
 
@@ -65,7 +66,20 @@ class environment extends \Twig_Environment
 			'autoescape'	=> false,
 		), $options);
 
-		return parent::__construct($loader, $options);
+		$chain_loader = new \Twig_Loader_Chain();
+		$chain_loader->addLoader($phpbb_loader);
+
+		foreach ($loaders as $loader)
+		{
+			$chain_loader->addLoader($loader);
+		}
+
+		parent::__construct($chain_loader, $options);
+
+		foreach ($extensions as $extension)
+		{
+			$this->addExtension($extension);
+		}
 	}
 
 	/**
@@ -81,7 +95,6 @@ class environment extends \Twig_Environment
 
 		return $this->lexer;
 	}
-
 
 	/**
 	* Get the list of enabled phpBB extensions
@@ -136,66 +149,6 @@ class environment extends \Twig_Environment
 	}
 
 	/**
-	* Get the namespace look up order
-	*
-	* @return array
-	*/
-	public function getNamespaceLookUpOrder()
-	{
-		return $this->namespace_look_up_order;
-	}
-
-	/**
-	* Set the namespace look up order to load templates from
-	*
-	* @param array $namespace
-	* @return \Twig_Environment
-	*/
-	public function setNamespaceLookUpOrder($namespace)
-	{
-		$this->namespace_look_up_order = $namespace;
-
-		return $this;
-	}
-
-	/**
-	* Loads a template by name.
-	*
-	* @param string  $name  The template name
-	* @param integer $index The index if it is an embedded template
-	* @return \Twig_TemplateInterface A template instance representing the given template name
-	* @throws \Twig_Error_Loader
-	*/
-	public function loadTemplate($name, $index = null)
-	{
-		if (strpos($name, '@') === false)
-		{
-			foreach ($this->getNamespaceLookUpOrder() as $namespace)
-			{
-				try
-				{
-					if ($namespace === '__main__')
-					{
-						return parent::loadTemplate($name, $index);
-					}
-
-					return parent::loadTemplate('@' . $namespace . '/' . $name, $index);
-				}
-				catch (\Twig_Error_Loader $e)
-				{
-				}
-			}
-
-			// We were unable to load any templates
-			throw $e;
-		}
-		else
-		{
-			return parent::loadTemplate($name, $index);
-		}
-	}
-
-	/**
 	* Finds a template by name.
 	*
 	* @param string  $name  The template name
@@ -204,30 +157,6 @@ class environment extends \Twig_Environment
 	*/
 	public function findTemplate($name)
 	{
-		if (strpos($name, '@') === false)
-		{
-			foreach ($this->getNamespaceLookUpOrder() as $namespace)
-			{
-				try
-				{
-					if ($namespace === '__main__')
-					{
-						return parent::getLoader()->getCacheKey($name);
-					}
-
-					return parent::getLoader()->getCacheKey('@' . $namespace . '/' . $name);
-				}
-				catch (\Twig_Error_Loader $e)
-				{
-				}
-			}
-
-			// We were unable to load any templates
-			throw $e;
-		}
-		else
-		{
-			return parent::getLoader()->getCacheKey($name);
-		}
+		return parent::getLoader()->getCacheKey($name);
 	}
 }

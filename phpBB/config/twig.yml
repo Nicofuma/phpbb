@@ -8,17 +8,26 @@ services:
             - @config
             - @path_helper
             - @service_container
+            - @template.twig.phpbb_loader
             - %core.template.cache_path%
             - @ext.manager
-            - @template.twig.loader
+            - @template.twig.loaders.collection
+            - @template.twig.extensions.collection
 
     template.twig.lexer:
         class: phpbb\template\twig\lexer
         arguments:
             - @template.twig.environment
 
-    template.twig.loader:
+    template.twig.phpbb_loader:
         class: phpbb\template\twig\loader
+
+    template.twig.loaders.collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - @service_container
+        tags:
+            - { name: service_collection, tag: twig.loader }
 
     template.twig.extensions.collection:
         class: phpbb\di\service_collection

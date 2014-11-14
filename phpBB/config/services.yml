@@ -169,9 +169,10 @@ services:
             - @user
             - @template_context
             - @template.twig.environment
+            - @template.twig.phpbb_loader
             - %core.template.cache_path%
-            - @template.twig.extensions.collection
             - @ext.manager
+            - @cache.driver
 
     template_context:
         class: phpbb\template\context

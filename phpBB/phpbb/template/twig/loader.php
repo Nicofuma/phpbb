@@ -14,80 +14,22 @@
 namespace phpbb\template\twig;
 
 /**
-* Twig Template loader
-*/
+ * Twig Template loader
+ */
 class loader extends \Twig_Loader_Filesystem
 {
-	protected $safe_directories = array();
+	private $previous_namespace = self::MAIN_NAMESPACE;
 
 	/**
-	* Set safe directories
-	*
-	* @param array $directories Array of directories that are safe (empty to clear)
-	* @return \Twig_Loader_Filesystem
-	*/
-	public function setSafeDirectories($directories = array())
-	{
-		$this->safe_directories = array();
-
-		if (!empty($directories))
-		{
-			foreach ($directories as $directory)
-			{
-				$this->addSafeDirectory($directory);
-			}
-		}
-
-		return $this;
-	}
+	 * Maps the templates.
+	 *
+	 * @var array
+	 */
+	private $mapping = array();
 
 	/**
-	* Add safe directory
-	*
-	* @param string $directory Directory that should be added
-	* @return \Twig_Loader_Filesystem
-	*/
-	public function addSafeDirectory($directory)
-	{
-		$directory = phpbb_realpath($directory);
-
-		if ($directory !== false)
-		{
-			$this->safe_directories[] = $directory;
-		}
-
-		return $this;
-	}
-
-	/**
-	* Get current safe directories
-	*
-	* @return array
-	*/
-	public function getSafeDirectories()
-	{
-		return $this->safe_directories;
-	}
-
-	/**
-	* Override for parent::validateName()
-	*
-	* This is done because we added support for safe directories, and when Twig
-	*	findTemplate() is called, validateName() is called first, which would
-	*	always throw an exception if the file is outside of the configured
-	*	template directories.
-	*/
-	protected function validateName($name)
-	{
-		return;
-	}
-
-	/**
-	* Find the template
-	*
-	* Override for Twig_Loader_Filesystem::findTemplate to add support
-	*	for loading from safe directories.
-	*/
+	 * {@inheritdoc}
+	 */
 	protected function findTemplate($name)
 	{
 		$name = (string) $name;
@@ -95,53 +37,125 @@ class loader extends \Twig_Loader_Filesystem
 		// normalize name
 		$name = preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
 
-		// If this is in the cache we can skip the entire process below
-		//	as it should have already been validated
 		if (isset($this->cache[$name])) {
 			return $this->cache[$name];
 		}
 
-		// First, find the template name. The override above of validateName
-		//	causes the validateName process to be skipped for this call
-		$file = parent::findTemplate($name);
+		$this->validateName($name);
+
+		$namespace = self::MAIN_NAMESPACE;
+		if (isset($name[0]) && '@' == $name[0]) {
+			if (false === $pos = strpos($name, '/')) {
+				throw new \Twig_Error_Loader(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
+			}
+
+			$namespace = substr($name, 1, $pos - 1);
+
+			$name = substr($name, $pos + 1);
+		}
 
 		try
 		{
-			// Try validating the name (which may throw an exception)
-			parent::validateName($name);
+			$template_path = $this->find_template_in_namespace($namespace, $name);
+			$this->previous_namespace = $namespace;
+
+			$this->cache[$name] = $template_path;
+			return $template_path;
 		}
 		catch (\Twig_Error_Loader $e)
 		{
-			if (strpos($e->getRawMessage(), 'Looks like you try to load a template outside configured directories') === 0)
+			// Tweak to allow the usage of the global namespace in a file loaded by a specific namespace
+			// (eg. 'INCLUDECSS ../theme/my_file.css' in an event).
+			if ($namespace === self::MAIN_NAMESPACE)
 			{
-				// Ok, so outside of the configured template directories, we
-				//	can now check if we're within a "safe" directory
-
-				// Find the real path of the directory the file is in
-				$directory = phpbb_realpath(dirname($file));
-
-				if ($directory === false)
-				{
-					// Some sort of error finding the actual path, must throw the exception
-					throw $e;
-				}
-
-				foreach ($this->safe_directories as $safe_directory)
-				{
-					if (strpos($directory, $safe_directory) === 0)
-					{
-						// The directory being loaded is below a directory
-						// that is "safe". We're good to load it!
-						return $file;
-					}
-				}
+				return $this->find_template_in_namespace($this->previous_namespace, $name);
 			}
+			else
+			{
+				throw $e;
+			}
+		}
+	}
 
-			// Not within any safe directories
-			throw $e;
+	/**
+	 * Find a template in a given namespace.
+	 *
+	 * @param string $namespace		The namespace where to look.
+	 * @param string $template_name	The the name of the template to search
+	 * @return string
+	 * @throws \Twig_Error_Loader
+	 */
+	protected function find_template_in_namespace($namespace, $template_name)
+	{
+		if (!isset($this->paths[$namespace]))
+		{
+			throw new \Twig_Error_Loader(sprintf('There are no registered paths for namespace "%s".', $namespace));
 		}
 
-		// No exception from validateName, safe to load.
-		return $file;
+		$resolved_name = $this->resolve_name($namespace, $template_name);
+
+		$names = $resolved_name === null ? array($template_name) : array($resolved_name, $template_name);
+		foreach ($names as $name)
+		{
+			foreach ($this->paths[$namespace] as $path)
+			{
+				if (is_file($path . '/' . $name))
+				{
+					return $path . '/' . $name;
+				}
+			}
+		}
+
+		throw new \Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $template_name, implode(', ', $this->paths[$namespace])));
+	}
+
+	/**
+	 * Set the mapping for a given namespace.
+	 *
+	 * @param string $namespace	The namespace to map
+	 * @param array $mapping	The mapping
+	 */
+	public function set_mapping($namespace, $mapping)
+	{
+		$this->mapping[$namespace] = $mapping;
+	}
+
+	/**
+	 * Return the mapping for a given namespace.
+	 *
+	 * @param string $namespace	The mapped namespace
+	 * @return array
+	 */
+	public function get_mapping($namespace)
+	{
+		return isset($this->mapping[$namespace]) ? $this->mapping[$namespace] : array();
+	}
+
+	/**
+	 * Resolve a template name following the given namespace mapping. If their isn't any mapped template, return null.
+	 *
+	 * @param string $namespace	The namespace to use
+	 * @param string $name		The template to resolve
+	 * @return string|null
+	 */
+	protected function resolve_name($namespace, $name)
+	{
+		if (isset($this->mapping[self::MAIN_NAMESPACE]))
+		{
+			if (isset($this->mapping[self::MAIN_NAMESPACE]["@{$namespace}/{$name}"]))
+			{
+				return $this->mapping[self::MAIN_NAMESPACE]["@{$namespace}/{$name}"];
+			}
+		}
+
+		if (isset($this->mapping[$namespace]))
+		{
+			if (isset($this->mapping[$namespace][$name]))
+			{
+				return $this->mapping[$namespace][$name];
+			}
+		}
+
+		return null;
 	}
 }

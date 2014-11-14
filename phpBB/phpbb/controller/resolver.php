@@ -114,7 +114,7 @@ class resolver implements ControllerResolverInterface
 
 			if (is_dir($this->phpbb_root_path . $controller_style_dir))
 			{
-				$this->template->set_style(array($controller_style_dir, 'styles'));
+				$this->template->set_global_namespace($controller_dir[0] . '/' . $controller_dir[1]);
 			}
 		}
 
