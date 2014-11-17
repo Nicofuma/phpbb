@@ -227,6 +227,26 @@ class loader extends \Twig_Loader_Filesystem
 	/**
 	 * Resolve a template name following the given namespace mapping. If their isn't any mapped template, return null.
 	 *
+	 * <pre>
+	 *       +----<----No---<---------<----------<------+
+	 *       |                                          |
+	 * +----------+       /--------------\      /--------------\
+	 * | resolver |------>| US response? |-Yes->| File exists? |-Yes----> Return the template path
+	 * +----------+       \--------------/      \--------------/
+	 * | only US  |              |
+	 * +----------+              |
+	 *   |   |                   |
+	 *   |   +----<----No---<----+
+	 *   |
+	 *   +-->---Error (loop)--->---------> Return null
+	 * </pre>
+	 *
+	 * Resolver priorities:
+	 * <ul>
+	 *   <li>User style (including override of @vendor/template)</li>
+	 *   <li>$namespace (current style if $namespace is the main namespace)</li>
+	 * </ul>
+	 *
 	 * @param string	$namespace			The namespace to use
 	 * @param string	$name				The template to resolve
 	 * @param boolean	$only_user_style	If yes only the user style's mapping will be considered
