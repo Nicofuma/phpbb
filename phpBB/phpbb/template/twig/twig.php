@@ -86,6 +86,13 @@ class twig extends \phpbb\template\base
 	protected $phpbb_loader;
 
 	/**
+	 * DB driver
+	 *
+	 * @var \phpbb\db\driver\driver_interface
+	 */
+	protected $db;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param \phpbb\path_helper					$path_helper
@@ -98,7 +105,7 @@ class twig extends \phpbb\template\base
 	 * @param string								$cache_path
 	 * @param \phpbb\extension\manager				$extension_manager	Extension manager, if null then template events will not be invoked
 	 */
-	public function __construct(\phpbb\path_helper $path_helper, $config, $user, \phpbb\template\context $context, environment $twig_environment, loader $phpbb_loader, $cache_path, \phpbb\extension\manager $extension_manager = null, \phpbb\cache\driver\driver_interface $cache = null)
+	public function __construct(\phpbb\path_helper $path_helper, $config, $user, \phpbb\template\context $context, environment $twig_environment, loader $phpbb_loader, $cache_path, \phpbb\extension\manager $extension_manager = null, \phpbb\cache\driver\driver_interface $cache = null, \phpbb\db\driver\driver_interface $db = null)
 	{
 		$this->path_helper = $path_helper;
 		$this->phpbb_root_path = $path_helper->get_phpbb_root_path();
@@ -111,6 +118,7 @@ class twig extends \phpbb\template\base
 		$this->twig = $twig_environment;
 		$this->phpbb_loader = $phpbb_loader;
 		$this->cache = $cache;
+		$this->db = $db;
 	}
 
 	/**
@@ -164,14 +172,18 @@ class twig extends \phpbb\template\base
 			unset($style_directories[$key]);
 		}
 
-		$styles = $this->get_user_style();
+		$styles = $this->get_styles();
+		$styles[] = array('prosilver3');
+		$this->set_styles($styles);
+
+		$user_style = $this->get_user_style();
 		if ($this->phpbb_loader->getPaths('core') === array())
 		{
 			// We should set up the core styles path since not already setup
-			$this->set_core_style($styles, true);
+			$this->set_core_style($user_style, true);
 		}
 
-		$this->set_extensions_style($styles);
+		$this->set_extensions_style($user_style);
 
 		$this->set_global_namespace('core', false);
 
@@ -260,15 +272,29 @@ class twig extends \phpbb\template\base
 	 */
 	public function set_core_style($styles, $reset = false)
 	{
-		$paths = $this->get_styles_paths($this->phpbb_root_path . 'styles', $styles, true);
+		//$paths = $this->get_style_inheritance_paths($this->phpbb_root_path . 'styles', $styles, true);
 
-		$paths['core'] = $paths[$styles[0]];
+		$paths['core'] = $this->phpbb_loader->getPaths($styles[0]);
 
 		$this->set_loader_mapping($styles[0], 'core');
 
 		$this->set_loader_paths($paths, $reset);
 
 		return $this;
+	}
+
+	/**
+	 * Set the list of available styles.
+	 *
+	 * @param array $styles List of available styles.
+	 */
+	public function set_styles($styles)
+	{
+		foreach ($styles as $style)
+		{
+			$paths = $this->get_style_inheritance_paths($this->phpbb_root_path . 'styles', $style, true);
+			$this->set_loader_paths($paths, true);
+		}
 	}
 
 	/**
@@ -297,9 +323,17 @@ class twig extends \phpbb\template\base
 					$ext_style_dirs = array();
 					foreach ($styles as $style)
 					{
-						$style_ext_dirs = array_merge($style_ext_dirs, $this->get_style_path("{$this->phpbb_root_path}styles/{$style}/ext/$ext_namespace"));
-						$ext_style_dirs = array_merge($ext_style_dirs, $this->get_style_path("{$ext_path}styles/{$style}"));
+						$style_ext_paths = $this->get_style_path("{$this->phpbb_root_path}styles/{$style}/ext/$ext_namespace");
+						$ext_style_paths = $this->get_style_path("{$ext_path}styles/{$style}");
+						$style_ext_dirs = array_merge($style_ext_dirs, $style_ext_paths);
+						$ext_style_dirs = array_merge($ext_style_dirs, $ext_style_paths);
+
+						$this->set_style_paths($style, $style_ext_paths);
+						$this->set_style_paths($style, $ext_style_paths);
 					}
+
+					$all_style_paths = $this->get_style_path("{$ext_path}styles/all");
+					$this->set_style_paths($current_style, $all_style_paths);
 
 					$paths[$namespace] = array_merge(
 					// First look in /styles/<style>/ext/<vendor>/<ext_name>/
@@ -309,7 +343,7 @@ class twig extends \phpbb\template\base
 						$ext_style_dirs,
 
 						// /ext/<vendor>/<ext_name>/styles/all/
-						$this->get_style_path("{$ext_path}styles/all"),
+						$all_style_paths,
 
 						// And finally in /styles/<style/
 						$this->phpbb_loader->getPaths($current_style)
@@ -337,7 +371,7 @@ class twig extends \phpbb\template\base
 	 * @param boolean	$set_mapping	Set the loader mapping if true.
 	 * @return mixed
 	 */
-	protected function get_styles_paths($root_dir, $styles, $set_mapping = false)
+	protected function get_style_inheritance_paths($root_dir, $styles, $set_mapping = false)
 	{
 		$styles = array_reverse($styles);
 
@@ -350,11 +384,14 @@ class twig extends \phpbb\template\base
 			if (is_dir($path))
 			{
 				$parents_root_dir[] = $path;
-				$paths_parent = array_merge($this->get_style_path($path), $paths_parent);
+				$style_paths = $this->get_style_path($path);
+				$paths_parent = array_merge($style_paths, $paths_parent);
+
+				$this->set_style_paths($name, $style_paths);
 
 				if ($set_mapping)
 				{
-					$this->set_loader_mapping($name, $name, $parents_root_dir);
+					$this->set_loader_mapping($name, $name, $parents_root_dir, $style_paths);
 				}
 			}
 
@@ -413,6 +450,17 @@ class twig extends \phpbb\template\base
 	}
 
 	/**
+	 * Associate a list of paths to a style.
+	 *
+	 * @param string		$style	Name of the style.
+	 * @param array|string	$paths	List of paths directly associated with this style.
+	 */
+	protected function set_style_paths($style, $paths)
+	{
+		$this->phpbb_loader->set_style_paths($style, $paths);
+	}
+
+	/**
 	 * Set the loader mapping.
 	 *
 	 * @param string		$real_namespace		The namespace which defines the mapping (can't be __main__).
@@ -468,6 +516,38 @@ class twig extends \phpbb\template\base
 		{
 			$this->phpbb_loader->set_mapping($usage_namespace, $mapping);
 		}
+	}
+
+	/**
+	 * Lists all styles
+	 *
+	 * @return array LIst of the installed styles with their inheritance tree (more specific first).
+	 */
+	protected function get_styles()
+	{
+		$sql = 'SELECT *
+			FROM ' . STYLES_TABLE;
+		$result = $this->db->sql_query($sql);
+
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		$styles = array();
+		foreach ($rows as $row)
+		{
+			$style_list = array(
+				$row['style_path'],
+			);
+
+			if ($row['style_parent_id'])
+			{
+				$style_list = array_merge($style_list, array_reverse(explode('/', $row['style_parent_tree'])));
+			}
+
+			$styles[] = $style_list;
+		}
+
+		return $styles;
 	}
 
 	/**
@@ -545,4 +625,15 @@ class twig extends \phpbb\template\base
 	{
 		return $this->twig->getLoader()->getCacheKey($this->get_filename_from_handle($handle));
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function get_filename_from_handle($handle)
+	{
+		$filename = parent::get_filename_from_handle($handle);
+		return substr($filename, 0, strrpos($filename, '.'));
+	}
+
+
 }

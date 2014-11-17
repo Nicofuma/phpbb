@@ -173,6 +173,7 @@ services:
             - %core.template.cache_path%
             - @ext.manager
             - @cache.driver
+            - @dbal.conn
 
     template_context:
         class: phpbb\template\context
