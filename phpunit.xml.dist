@@ -42,4 +42,8 @@
             <directory suffix=".php">./phpBB/phpbb/</directory>
         </whitelist>
     </filter>
+
+    <listeners>
+        <listener class="\MyBuilder\PhpunitAccelerator\TestListener"/>
+    </listeners>
 </phpunit>
