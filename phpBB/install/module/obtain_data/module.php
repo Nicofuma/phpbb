@@ -13,6 +13,8 @@
 
 namespace phpbb\install\module\obtain_data;
 
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+
 class module extends \phpbb\install\module_base
 {
 	/**
@@ -34,7 +36,19 @@ class module extends \phpbb\install\module_base
 
 			// Recover task to be executed
 			/** @var \phpbb\install\task_interface $task */
-			$task = $this->container->get($this->task_collection[$task_index]);
+			$task_service_name = $this->task_collection[$task_index];
+			try
+			{
+				/** @var \phpbb\install\task_interface $task */
+				$task = $this->container->get($task_service_name);
+			}
+			catch (InvalidArgumentException $e)
+			{
+				$this->iohandler->add_error_message('The task ' . $task_service_name . ' is missing.');
+				break;
+			}
+
+			$this->iohandler->add_log_message('> Activate task ' . $task_service_name);
 
 			// Iterate to the next task
 			$task_index++;
@@ -42,6 +56,7 @@ class module extends \phpbb\install\module_base
 			// Check if we can run the task
 			if (!$task->is_essential() && !$task->check_requirements())
 			{
+				$this->iohandler->add_log_message('> Skip task ' . $task_service_name);
 				continue;
 			}
 

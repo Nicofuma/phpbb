@@ -13,6 +13,11 @@
 
 namespace phpbb\install;
 
+use phpbb\install\helper\iohandler\iohandler_base;
+use phpbb\install\helper\iohandler\iohandler_interface;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+
 class installer
 {
 	/**
@@ -31,7 +36,7 @@ class installer
 	protected $installer_modules;
 
 	/**
-	 * @var \phpbb\install\helper\iohandler\iohandler_interface
+	 * @var iohandler_interface
 	 */
 	protected $iohandler;
 
