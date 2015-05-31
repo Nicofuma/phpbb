@@ -59,14 +59,11 @@ class factory
 	 */
 	public function get()
 	{
-		switch ($this->environment)
+		if ($this->container->has('installer.helper.iohandler_' . $this->environment))
 		{
-			case 'ajax':
-				return $this->container->get('installer.helper.iohandler_ajax');
-			break;
-			default:
-				throw new iohandler_not_implemented_exception();
-			break;
+			return $this->container->get('installer.helper.iohandler_' . $this->environment);
 		}
+
+		throw new iohandler_not_implemented_exception();
 	}
 }
