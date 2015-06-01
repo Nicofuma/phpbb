@@ -169,6 +169,7 @@ class ajax_iohandler extends iohandler_base
 			'errors' => $this->errors,
 			'warnings' => $this->warnings,
 			'logs' => $this->logs,
+			'success' => $this->success,
 		);
 
 		if (!empty($this->form))
@@ -190,6 +191,7 @@ class ajax_iohandler extends iohandler_base
 		$this->errors = array();
 		$this->warnings = array();
 		$this->logs = array();
+		$this->success = array();
 
 		return $json_array;
 	}

@@ -44,6 +44,13 @@ abstract class iohandler_base implements iohandler_interface
 	protected $logs;
 
 	/**
+	 * Array of success messages
+	 *
+	 * @var array
+	 */
+	protected $success;
+
+	/**
 	 * @var \phpbb\language\language
 	 */
 	protected $language;
@@ -71,6 +78,7 @@ abstract class iohandler_base implements iohandler_interface
 		$this->errors	= array();
 		$this->warnings	= array();
 		$this->logs		= array();
+		$this->success	= array();
 
 		$this->task_progress_count		= 0;
 		$this->current_task_progress	= 0;
@@ -109,6 +117,14 @@ abstract class iohandler_base implements iohandler_interface
 	public function add_log_message($log_title, $log_description = false)
 	{
 		$this->logs[] = $this->translate_message($log_title, $log_description);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function add_success_message($success_title, $success_description = false)
+	{
+		$this->success[] = $this->translate_message($success_title, $success_description);
 	}
 
 	/**

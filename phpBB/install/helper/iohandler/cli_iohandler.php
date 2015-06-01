@@ -13,23 +13,14 @@
 
 namespace phpbb\install\helper\iohandler;
 use phpbb\install\exception\installer_exception;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\StyleInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Input-Output handler for the CLI frontend
  */
 class cli_iohandler extends iohandler_base
 {
-	/**
-	 * @var InputInterface
-	 */
-	protected $input;
-
 	/**
 	 * @var OutputInterface
 	 */
@@ -46,11 +37,14 @@ class cli_iohandler extends iohandler_base
 	protected $input_values = array();
 
 	/**
+	 * Set the style and output used to display feedback;
+	 *
 	 * @param StyleInterface $style
 	 */
-	public function set_style(StyleInterface $style)
+	public function set_style(StyleInterface $style, OutputInterface $output)
 	{
 		$this->io = $style;
+		$this->output = $output;
 	}
 
 	/**
@@ -118,20 +112,35 @@ class cli_iohandler extends iohandler_base
 	{
 	}
 
+	/**
+	 * {@inheritdoc
+	 */
 	public function add_error_message($error_title, $error_description = false)
 	{
 		$this->io->error($this->translate_message($error_title, $error_description));
 	}
 
+	/**
+	 * {@inheritdoc
+	 */
 	public function add_warning_message($warning_title, $warning_description = false)
 	{
 		$this->io->warning($this->translate_message($warning_title, $warning_description));
 	}
 
+	/**
+	 * {@inheritdoc
+	 */
 	public function add_log_message($log_title, $log_description = false)
 	{
-		$this->io->writeln($this->translate_message($log_title, $log_description));
+		$this->output->writeln($this->translate_message($log_title, $log_description));
 	}
 
-
+	/**
+	 * {@inheritdoc
+	 */
+	public function add_success_message($error_title, $error_description = false)
+	{
+		$this->io->success($this->translate_message($error_title, $error_description));
+	}
 }

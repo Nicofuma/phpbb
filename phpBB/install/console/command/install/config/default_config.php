@@ -11,15 +11,16 @@
 *
 */
 
-namespace phpbb\install\console\command;
+namespace phpbb\install\console\command\install\config;
 
 use phpbb\install\exception\installer_exception;
+use phpbb\install\helper\iohandler\cli_iohandler;
 use phpbb\install\helper\iohandler\factory;
+use phpbb\install\helper\iohandler\iohandler_interface;
 use phpbb\install\installer;
 use phpbb\install\installer_configuration;
 use phpbb\language\language;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
-class install extends \phpbb\console\command\command
+class default_config extends \phpbb\console\command\command
 {
 	/**
 	 * @var factory
@@ -62,30 +63,29 @@ class install extends \phpbb\console\command\command
 	}
 
 	/**
-	* {@inheritdoc}
-	*/
+	 *
+	 * {@inheritdoc}
+	 */
 	protected function configure()
 	{
 		$this
-			->setName('install')
+			->setName('install:config:default')
 			->addArgument(
 				'config-file',
-				InputArgument::REQUIRED,
-				$this->user->lang('CLI_CONFIG_FILE'))
-			->setDescription($this->language->lang('CLI_INSTALL_BOARD'))
+				InputArgument::OPTIONAL,
+				$this->language->lang('CLI_CONFIG_FILE'))
+			->setDescription($this->language->lang('CLI_INSTALL_DEFAULT_CONFIG'))
 		;
 	}
 
 	/**
-	* Executes the command cache:purge.
-	*
-	* Purge the cache (including permissions) and increment the asset_version number
-	*
-	* @param InputInterface  $input  An InputInterface instance
-	* @param OutputInterface $output An OutputInterface instance
-	*
-	* @return null
-	*/
+	 * Display the default configuration
+	 *
+	 * @param InputInterface  $input  An InputInterface instance
+	 * @param OutputInterface $output An OutputInterface instance
+	 *
+	 * @return null
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		// @todo check that phpBB is not already installed
@@ -95,34 +95,16 @@ class install extends \phpbb\console\command\command
 		/** @var \phpbb\install\helper\iohandler\cli_iohandler $iohandler */
 		$iohandler = $this->iohandler_factory->get();
 		$style = new SymfonyStyle($input, $output);
-		$iohandler->set_style($style);
-
-		$config_file = $input->getArgument('config-file');
-
-		if (!is_file($config_file))
-		{
-			$iohandler->add_error_message(array('MISSING_FILE', array($config_file)));
-
-			return;
-		}
-
-		try
-		{
-			$config = Yaml::parse(file_get_contents($config_file), true, false);
-		}
-		catch (ParseException $e)
-		{
-			$iohandler->add_error_message('INVALID_YAML_FILE');
-
-			return;
-		}
+		$iohandler->set_style($style, $output);
 
 		$processor = new Processor();
 		$configuration = new installer_configuration();
 
+		dump($configuration->getConfigTreeBuilder()->buildTree());
+
 		try
 		{
-			$config = $processor->processConfiguration($configuration, $config);
+			$config = $processor->processConfiguration($configuration, array());
 		}
 		catch (Exception $e)
 		{
@@ -131,6 +113,17 @@ class install extends \phpbb\console\command\command
 			return;
 		}
 
+		dump($config);
+	}
+
+	/**
+	 * Register the configuration to simulate the forms.
+	 *
+	 * @param cli_iohandler $iohandler
+	 * @param array $config
+	 */
+	private function register_configuration(cli_iohandler $iohandler, $config)
+	{
 		$iohandler->set_input('admin_name', $config['admin']['name']);
 		$iohandler->set_input('admin_pass1', $config['admin']['password']);
 		$iohandler->set_input('admin_pass2', $config['admin']['password']);
@@ -166,17 +159,5 @@ class install extends \phpbb\console\command\command
 		$iohandler->set_input('server_port', $config['server']['server_port']);
 		$iohandler->set_input('script_path', $config['server']['script_path']);
 		$iohandler->set_input('submit_server', 'submit');
-
-		try
-		{
-			$this->installer->run();
-		}
-		catch (installer_exception $e)
-		{
-			$iohandler->add_error_message($e->getMessage());
-			return;
-		}
-
-		$style->success('INSTALL_ERROR');
 	}
 }
