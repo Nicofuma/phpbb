@@ -13,10 +13,7 @@
 
 namespace phpbb\install\console\command\install\config;
 
-use phpbb\install\exception\installer_exception;
-use phpbb\install\helper\iohandler\cli_iohandler;
 use phpbb\install\helper\iohandler\factory;
-use phpbb\install\helper\iohandler\iohandler_interface;
 use phpbb\install\installer;
 use phpbb\install\installer_configuration;
 use phpbb\language\language;

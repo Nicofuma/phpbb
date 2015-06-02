@@ -59,10 +59,6 @@ $phpbb_installer_container = $phpbb_installer_container_builder
 	->without_cache()
 	->get_container();
 
-// Path to templates
-$paths = array($phpbb_root_path . 'install/update/new/adm/style', $phpbb_admin_path . 'style');
-$paths = array_filter($paths, 'is_dir');
-
 /** @var \phpbb\filesystem\filesystem $phpbb_filesystem */
 $phpbb_filesystem = $phpbb_installer_container->get('filesystem');
 
