@@ -12,9 +12,11 @@
  */
 
 namespace phpbb\install\helper\iohandler;
+
 use phpbb\install\exception\installer_exception;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\StyleInterface;
+use Symfony\Component\Console\Style\OutputStyle;
 
 /**
  * Input-Output handler for the CLI frontend
@@ -27,7 +29,7 @@ class cli_iohandler extends iohandler_base
 	protected $output;
 
 	/**
-	 * @var StyleInterface
+	 * @var OutputStyle
 	 */
 	protected $io;
 
@@ -37,11 +39,16 @@ class cli_iohandler extends iohandler_base
 	protected $input_values = array();
 
 	/**
+	 * @var ProgressBar
+	 */
+	protected $progress_bar;
+
+	/**
 	 * Set the style and output used to display feedback;
 	 *
-	 * @param StyleInterface $style
+	 * @param OutputStyle $style
 	 */
-	public function set_style(StyleInterface $style, OutputInterface $output)
+	public function set_style(OutputStyle $style, OutputInterface $output)
 	{
 		$this->io = $style;
 		$this->output = $output;
@@ -117,7 +124,16 @@ class cli_iohandler extends iohandler_base
 	 */
 	public function add_error_message($error_title, $error_description = false)
 	{
-		$this->io->error($this->translate_message($error_title, $error_description));
+		$this->io->newLine();
+
+		$message = $this->translate_message($error_title, $error_description);
+		$this->io->error($message['title'] . "\n" . $message['description']);
+
+		if ($this->progress_bar !== null)
+		{
+			$this->io->newLine(2);
+			$this->progress_bar->display();
+		}
 	}
 
 	/**
@@ -125,7 +141,16 @@ class cli_iohandler extends iohandler_base
 	 */
 	public function add_warning_message($warning_title, $warning_description = false)
 	{
-		$this->io->warning($this->translate_message($warning_title, $warning_description));
+		$this->io->newLine();
+
+		$message = $this->translate_message($warning_title, $warning_description);
+		$this->io->warning($message['title'] . "\n" . $message['description']);
+
+		if ($this->progress_bar !== null)
+		{
+			$this->io->newLine(2);
+			$this->progress_bar->display();
+		}
 	}
 
 	/**
@@ -133,7 +158,10 @@ class cli_iohandler extends iohandler_base
 	 */
 	public function add_log_message($log_title, $log_description = false)
 	{
-		$this->output->writeln($this->translate_message($log_title, $log_description));
+		if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL)
+		{
+			$this->output->writeln(sprintf('[%3d/%-3d] ---- %s', $this->current_task_progress, $this->task_progress_count, $this->translate_message($log_title, $log_description)['title']));
+		}
 	}
 
 	/**
@@ -141,6 +169,67 @@ class cli_iohandler extends iohandler_base
 	 */
 	public function add_success_message($error_title, $error_description = false)
 	{
-		$this->io->success($this->translate_message($error_title, $error_description));
+		$this->io->newLine();
+
+		$message = $this->translate_message($error_title, $error_description);
+		$this->io->success($message['title'] . "\n" . $message['description']);
+
+		if ($this->progress_bar !== null)
+		{
+			$this->io->newLine(2);
+			$this->progress_bar->display();
+		}
+	}
+
+	public function set_task_count($task_count)
+	{
+		parent::set_task_count($task_count);
+
+		if ($this->output->getVerbosity() === OutputInterface::VERBOSITY_NORMAL)
+		{
+			$this->progress_bar = $this->io->createProgressBar($task_count);
+			$this->progress_bar->setFormat(
+				"    %current:3s%/%max:-3s% %bar%  %percent:3s%%\n" .
+				"             %message%\n");
+			$this->progress_bar->setBarWidth(60);
+
+			if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
+				$this->progress_bar->setEmptyBarCharacter('░'); // light shade character \u2591
+				$this->progress_bar->setProgressCharacter('');
+				$this->progress_bar->setBarCharacter('▓'); // dark shade character \u2593
+			}
+			$this->progress_bar->setMessage('');
+			$this->io->newLine(2);
+			$this->progress_bar->start();
+		}
+	}
+
+	public function set_progress($task_lang_key, $task_number)
+	{
+		parent::set_progress($task_lang_key, $task_number);
+
+		if ($this->progress_bar !== null)
+		{
+			$this->progress_bar->setProgress($this->current_task_progress);
+			$this->progress_bar->setMessage($this->current_task_name);
+		}
+		else
+		{
+			$this->output->writeln(sprintf('[%3d/%-3d] %s', $this->current_task_progress, $this->task_progress_count, $this->current_task_name));
+		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function finish_progress($message_lang_key)
+	{
+		parent::finish_progress($message_lang_key);
+
+		if ($this->progress_bar !== null)
+		{
+			$this->progress_bar->finish();
+			$this->progress_bar = null;
+		}
 	}
 }

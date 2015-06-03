@@ -98,6 +98,8 @@ class install extends \phpbb\console\command\command
 		$style = new SymfonyStyle($input, $output);
 		$iohandler->set_style($style, $output);
 
+		$this->installer->set_iohandler($iohandler);
+
 		$config_file = $input->getArgument('config-file');
 
 		if (!is_file($config_file))
@@ -143,8 +145,6 @@ class install extends \phpbb\console\command\command
 			$iohandler->add_error_message($e->getMessage());
 			return;
 		}
-
-		$style->success('INSTALL_ERROR');
 	}
 
 	/**

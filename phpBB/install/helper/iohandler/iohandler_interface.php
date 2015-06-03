@@ -137,4 +137,11 @@ interface iohandler_interface
 	 * @param int		$task_number	Position of the current task in the task queue
 	 */
 	public function set_progress($task_lang_key, $task_number);
+
+	/**
+	 * Finish the progress bar
+	 *
+	 * @param string	$message_lang_key	Language key for the message
+	 */
+	public function finish_progress($message_lang_key);
 }

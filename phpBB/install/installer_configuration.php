@@ -83,6 +83,7 @@ class installer_configuration implements ConfigurationInterface
 					->end()
 				->end()
 				->arrayNode('email')
+					->canBeEnabled()
 					->addDefaultsIfNotSet()
 					->children()
 						->booleanNode('smtp_delivery')

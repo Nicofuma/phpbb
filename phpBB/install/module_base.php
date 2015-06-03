@@ -120,7 +120,7 @@ abstract class module_base implements module_interface
 				break;
 			}
 
-			$this->iohandler->add_log_message('> Activate task ' . $task_service_name);
+			$this->iohandler->add_log_message('Activate task ' . $task_service_name);
 
 			// Send progress information
 			$this->iohandler->set_progress(
@@ -135,7 +135,7 @@ abstract class module_base implements module_interface
 			// Check if we can run the task
 			if (!$task->is_essential() && !$task->check_requirements())
 			{
-				$this->iohandler->add_log_message('> Skip task ' . $task_service_name);
+				$this->iohandler->add_log_message('Skip task ' . $task_service_name);
 				continue;
 			}
 
