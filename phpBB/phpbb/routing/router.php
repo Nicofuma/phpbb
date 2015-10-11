@@ -255,7 +255,7 @@ class router implements RouterInterface
 		}
 
 		$this->create_dumped_url_generator();
-		var_dump($this->get_routes());
+		
 		return $this->generator;
 	}
 
@@ -266,11 +266,12 @@ class router implements RouterInterface
 	{
 		try
 		{
+			var_dump(file_exists("{$this->phpbb_root_path}cache/{$this->environment}/url_generator.{$this->php_ext}"));
 			$cache = new ConfigCache("{$this->phpbb_root_path}cache/{$this->environment}/url_generator.{$this->php_ext}", defined('DEBUG'));
 			if (!$cache->isFresh())
 			{
 				$dumper = new PhpGeneratorDumper($this->get_routes());
-
+				echo 'not fresh';
 				$options = array(
 					'class'      => 'phpbb_url_generator',
 					'base_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator',
