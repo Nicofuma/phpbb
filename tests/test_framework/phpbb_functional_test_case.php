@@ -222,6 +222,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 		$cache->purge();
 		$cache->unload();
 		$cache->load();
+		var_dump(file_exists(self::$root_url."cache/test/url_generator.php"));
 	}
 
 	protected function get_extension_manager()
