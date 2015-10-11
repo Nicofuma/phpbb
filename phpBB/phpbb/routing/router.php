@@ -255,7 +255,7 @@ class router implements RouterInterface
 		}
 
 		$this->create_dumped_url_generator();
-
+		var_dump($this->generator);
 		return $this->generator;
 	}
 
