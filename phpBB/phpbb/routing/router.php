@@ -120,6 +120,7 @@ class router implements RouterInterface
 		if ($this->route_collection === null /*|| $this->route_collection->count() === 0*/)
 		{
 			$this->route_collection = new RouteCollection;
+			var_dump($this->route_collection);
 			foreach ($this->resources_locator->locate_resources() as $resource)
 			{
 				if (is_array($resource))
@@ -266,12 +267,11 @@ class router implements RouterInterface
 	{
 		try
 		{
-			var_dump(file_exists("{$this->phpbb_root_path}cache/{$this->environment}/url_generator.{$this->php_ext}"));
 			$cache = new ConfigCache("{$this->phpbb_root_path}cache/{$this->environment}/url_generator.{$this->php_ext}", defined('DEBUG'));
 			if (!$cache->isFresh())
 			{
 				$dumper = new PhpGeneratorDumper($this->get_routes());
-				echo 'not fresh';
+				var_dump($this->get_routes());
 				$options = array(
 					'class'      => 'phpbb_url_generator',
 					'base_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator',
