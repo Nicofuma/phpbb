@@ -191,6 +191,23 @@ class gravatar extends \phpbb\avatar\driver\driver
 		* @since 3.1.7-RC1
 		*/
 		$vars = array('row', 'url');
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.get_gravatar_url_after', compact($vars)));
 
 		return $url;

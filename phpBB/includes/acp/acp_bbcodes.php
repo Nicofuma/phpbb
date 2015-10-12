@@ -123,6 +123,23 @@ class acp_bbcodes
 				* @since 3.1.0-a3
 				*/
 				$vars = array('action', 'tpl_ary', 'bbcode_id', 'bbcode_tokens');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_bbcodes_edit_add', compact($vars)));
 
 				$template->assign_vars($tpl_ary);
@@ -170,6 +187,23 @@ class acp_bbcodes
 					'bbcode_helpline',
 					'hidden_fields',
 				);
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_bbcodes_modify_create', compact($vars)));
 
 				$warn_text = preg_match('%<[^>]*\{text[\d]*\}[^>]*>%i', $bbcode_tpl);
@@ -373,6 +407,23 @@ class acp_bbcodes
 		* @since 3.1.0-a3
 		*/
 		$vars = array('action', 'sql_ary', 'template_data', 'u_action');
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.acp_bbcodes_display_form', compact($vars)));
 
 		$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
@@ -397,6 +448,23 @@ class acp_bbcodes
 			* @since 3.1.0-a3
 			*/
 			$vars = array('bbcodes_array', 'row', 'u_action');
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.acp_bbcodes_display_bbcodes', compact($vars)));
 
 			$template->assign_block_vars('bbcodes', $bbcodes_array);

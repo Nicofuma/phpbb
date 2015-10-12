@@ -105,6 +105,23 @@ $sql_ary = array(
 * @since 3.1.5-RC1
 */
 $vars = array('sql_ary');
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.viewonline_modify_forum_data_sql', compact($vars)));
 
 $result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary), 600);
@@ -172,6 +189,23 @@ $sql_ary = array(
 * @change 3.1.0-a2 Added vars guest_counter and forum_data
 */
 $vars = array('sql_ary', 'show_guests', 'guest_counter', 'forum_data');
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.viewonline_modify_sql', compact($vars)));
 
 $result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
@@ -397,6 +431,23 @@ while ($row = $db->sql_fetchrow($result))
 	* @change 3.1.0-a2 Added var forum_data
 	*/
 	$vars = array('on_page', 'row', 'location', 'location_url', 'forum_data');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.viewonline_overwrite_location', compact($vars)));
 
 	$template_row = array(
@@ -429,6 +480,23 @@ while ($row = $db->sql_fetchrow($result))
 	* @since 3.1.0-RC4
 	*/
 	$vars = array('on_page', 'row', 'forum_data', 'template_row');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.viewonline_modify_user_row', compact($vars)));
 
 	$template->assign_block_vars('user_row', $template_row);

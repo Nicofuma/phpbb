@@ -470,6 +470,23 @@ class acp_groups
 						'submit_ary',
 						'validation_checks',
 					);
+					foreach ($vars as $var) {
+						if(isset(${$var})) {
+							ob_start();
+							xdebug_debug_zval($var);
+							$info = ob_get_clean();
+							$__match__ = [];
+							preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+							$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+							if ((boolean)$info["is_ref"]) {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+							}
+						} else {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+						}
+					}
 					extract($phpbb_dispatcher->trigger_event('core.acp_manage_group_request_data', compact($vars)));
 
 					if ($validation_error = validate_data($submit_ary, $validation_checks))
@@ -538,6 +555,23 @@ class acp_groups
 							'submit_ary',
 							'test_variables',
 						);
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.acp_manage_group_initialise_data', compact($vars)));
 
 						foreach ($test_variables as $test => $type)
@@ -793,6 +827,23 @@ class acp_groups
 					'rank_options',
 					'error',
 				);
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_manage_group_display_form', compact($vars)));
 
 				return;

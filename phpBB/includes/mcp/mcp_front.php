@@ -59,6 +59,23 @@ function mcp_front_view($id, $mode, $action)
 			* @since 3.1.5-RC1
 			*/
 			$vars = array('sql_ary', 'forum_list');
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.mcp_front_queue_unapproved_total_before', compact($vars)));
 
 			$sql = $db->sql_build_query('SELECT', $sql_ary);
@@ -109,6 +126,23 @@ function mcp_front_view($id, $mode, $action)
 			* @since 3.1.0-RC3
 			*/
 			$vars = array('total', 'post_list', 'forum_list', 'forum_names');
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.mcp_front_view_queue_postid_list_after', compact($vars)));
 
 			if ($total)
@@ -184,6 +218,23 @@ function mcp_front_view($id, $mode, $action)
 			* @since 3.1.5-RC1
 			*/
 			$vars = array('sql', 'forum_list');
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.mcp_front_reports_count_query_before', compact($vars)));
 
 			$result = $db->sql_query($sql);
@@ -231,6 +282,23 @@ function mcp_front_view($id, $mode, $action)
 				* @since 3.1.0-RC3
 				*/
 				$vars = array('sql_ary', 'forum_list');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.mcp_front_reports_listing_query_before', compact($vars)));
 
 				$sql = $db->sql_build_query('SELECT', $sql_ary);

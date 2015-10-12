@@ -332,6 +332,23 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 		'author_id_ary',
 		'search_id',
 	);
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.search_modify_param_before', compact($vars)));
 
 	// pre-made searches
@@ -504,6 +521,23 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 		'show_results',
 		'sql',
 	);
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.search_modify_param_after', compact($vars)));
 
 	// show_results should not change after this
@@ -629,6 +663,23 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 		'u_search',
 		'search_id',
 	);
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.search_modify_url_parameters', compact($vars)));
 
 	if ($sql_where)
@@ -705,6 +756,23 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				'search_id',
 				'start',
 			);
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.search_get_posts_data', compact($vars)));
 
 			$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -769,6 +837,23 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				'sort_key',
 				'sql_order_by',
 			);
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.search_get_topic_data', compact($vars)));
 
 			$sql = "SELECT $sql_select
@@ -959,6 +1044,23 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 			'view',
 			'zebra',
 		);
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.search_modify_rowset', compact($vars)));
 
 		foreach ($rowset as $row)
@@ -1147,6 +1249,23 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				'zebra',
 				'attachments',
 			);
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.search_modify_tpl_ary', compact($vars)));
 
 			$template->assign_block_vars('searchresults', $tpl_ary);
@@ -1239,6 +1358,23 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 		'total_match_count',
 		'keywords',
 	);
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.search_results_modify_search_title', compact($vars)));
 
 	page_header(($l_search_title) ? $l_search_title : $user->lang['SEARCH']);

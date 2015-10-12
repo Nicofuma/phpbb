@@ -72,6 +72,23 @@ class ucp_prefs
 				* @changed 3.1.4-RC1 Added error variable to the event
 				*/
 				$vars = array('submit', 'data', 'error');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.ucp_prefs_personal_data', compact($vars)));
 
 				if ($submit)
@@ -121,6 +138,23 @@ class ucp_prefs
 						* @since 3.1.0-a1
 						*/
 						$vars = array('data', 'sql_ary');
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.ucp_prefs_personal_update_data', compact($vars)));
 
 						$sql = 'UPDATE ' . USERS_TABLE . '
@@ -249,6 +283,23 @@ class ucp_prefs
 				* @since 3.1.0-a1
 				*/
 				$vars = array('submit', 'data');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.ucp_prefs_view_data', compact($vars)));
 
 				if ($submit)
@@ -310,6 +361,23 @@ class ucp_prefs
 						* @since 3.1.0-a1
 						*/
 						$vars = array('data', 'sql_ary');
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.ucp_prefs_view_update_data', compact($vars)));
 
 						$sql = 'UPDATE ' . USERS_TABLE . '
@@ -412,6 +480,23 @@ class ucp_prefs
 				* @since 3.1.0-a1
 				*/
 				$vars = array('submit', 'data');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.ucp_prefs_post_data', compact($vars)));
 
 				if ($submit)
@@ -436,6 +521,23 @@ class ucp_prefs
 						* @since 3.1.0-a1
 						*/
 						$vars = array('data', 'sql_ary');
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.ucp_prefs_post_update_data', compact($vars)));
 
 						$sql = 'UPDATE ' . USERS_TABLE . '
@@ -479,6 +581,23 @@ class ucp_prefs
 			'mode',
 			's_hidden_fields',
 		);
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.ucp_prefs_modify_common', compact($vars)));
 
 		$template->assign_vars(array(

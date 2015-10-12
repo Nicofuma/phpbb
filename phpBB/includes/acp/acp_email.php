@@ -137,6 +137,23 @@ class acp_email
 				* @since 3.1.2-RC1
 				*/
 				$vars = array('sql_ary');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_email_modify_sql', compact($vars)));
 
 				$sql = $db->sql_build_query('SELECT', $sql_ary);
@@ -226,6 +243,23 @@ class acp_email
 					'use_queue',
 					'priority',
 				);
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_email_send_before', compact($vars)));
 
 				for ($i = 0, $size = sizeof($email_list); $i < $size; $i++)
@@ -337,6 +371,23 @@ class acp_email
 		* @since 3.1.4-RC1
 		*/
 		$vars = array('template_data', 'exclude', 'usernames');
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.acp_email_display', compact($vars)));
 
 		$template->assign_vars($template_data);

@@ -150,6 +150,23 @@ function user_update_name($old_name, $new_name)
 	* @since 3.1.0-a1
 	*/
 	$vars = array('old_name', 'new_name');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.update_username', compact($vars)));
 
 	// Because some tables/caches use username-specific data we need to purge this here.
@@ -269,6 +286,23 @@ function user_add($user_row, $cp_data = false, $notifications_data = null)
 	* @change 3.1.0-b5
 	*/
 	$vars = array('user_row', 'cp_data', 'sql_ary');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.user_add_modify_data', compact($vars)));
 
 	$sql = 'INSERT INTO ' . USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
@@ -385,6 +419,23 @@ function user_add($user_row, $cp_data = false, $notifications_data = null)
 	* @since 3.1.0-b5
 	*/
 	$vars = array('user_id', 'user_row', 'cp_data');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.user_add_after', compact($vars)));
 
 	return $user_id;
@@ -439,6 +490,23 @@ function user_delete($mode, $user_ids, $retain_username = true)
 	* @since 3.1.0-a1
 	*/
 	$vars = array('mode', 'user_ids', 'retain_username');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.delete_user_before', compact($vars)));
 
 	// Before we begin, we will remove the reports the user issued.
@@ -725,6 +793,23 @@ function user_delete($mode, $user_ids, $retain_username = true)
 	* @since 3.1.0-a1
 	*/
 	$vars = array('mode', 'user_ids', 'retain_username');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.delete_user_after', compact($vars)));
 
 	// Reset newest user info if appropriate
@@ -809,6 +894,23 @@ function user_active_flip($mode, $user_id_ary, $reason = INACTIVE_MANUAL)
 	* @since 3.1.4-RC1
 	*/
 	$vars = array('mode', 'reason', 'activated', 'deactivated', 'user_id_ary', 'sql_statements');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.user_active_flip_before', compact($vars)));
 
 	if (sizeof($sql_statements))
@@ -837,6 +939,23 @@ function user_active_flip($mode, $user_id_ary, $reason = INACTIVE_MANUAL)
 	* @since 3.1.4-RC1
 	*/
 	$vars = array('mode', 'reason', 'activated', 'deactivated', 'user_id_ary', 'sql_statements');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.user_active_flip_after', compact($vars)));
 
 	if ($deactivated)
@@ -2612,6 +2731,23 @@ function group_delete($group_id, $group_name = false)
 	* @since 3.1.0-a1
 	*/
 	$vars = array('group_id', 'group_name');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.delete_group_after', compact($vars)));
 
 	// Re-cache moderators
@@ -2861,6 +2997,23 @@ function group_user_del($group_id, $user_id_ary = false, $username_ary = false, 
 	* @since 3.1.0-a1
 	*/
 	$vars = array('group_id', 'group_name', 'user_id_ary', 'username_ary');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.group_delete_user_before', compact($vars)));
 
 	$sql = 'DELETE FROM ' . USER_GROUP_TABLE . "
@@ -2882,6 +3035,23 @@ function group_user_del($group_id, $user_id_ary = false, $username_ary = false, 
 	* @since 3.1.7-RC1
 	*/
 	$vars = array('group_id', 'group_name', 'user_id_ary', 'username_ary');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.group_delete_user_after', compact($vars)));
 
 	if (!$group_name)
@@ -3320,6 +3490,23 @@ function group_set_user_default($group_id, $user_id_ary, $group_attributes = fal
 	* @since 3.1.0-a1
 	*/
 	$vars = array('group_id', 'user_id_ary', 'group_attributes', 'update_listing', 'sql_ary');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.user_set_default_group', compact($vars)));
 
 	if ($update_listing)

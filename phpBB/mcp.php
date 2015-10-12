@@ -157,6 +157,23 @@ $vars = array(
 	'quickmod',
 	'topic_id',
 );
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.mcp_global_f_read_auth_after', compact($vars)));
 
 if ($forum_id)
@@ -225,6 +242,23 @@ if ($quickmod)
 			* @since 3.1.0-a4
 			*/
 			$vars = array('module', 'action', 'is_valid_action');
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.modify_quickmod_options', compact($vars)));
 
 			if (!$is_valid_action)
@@ -304,6 +338,23 @@ $vars = array(
 	'username',
 	'id',
 );
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.modify_mcp_modules_display_option', compact($vars)));
 
 // Load and execute the relevant module

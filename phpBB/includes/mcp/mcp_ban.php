@@ -53,6 +53,23 @@ class mcp_ban
 			'unbansubmit',
 			'mode',
 		);
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.mcp_ban_main', compact($vars)));
 
 		// Ban submitted?
@@ -96,6 +113,23 @@ class mcp_ban
 						'ban_give_reason',
 						'abort_ban',
 					);
+					foreach ($vars as $var) {
+						if(isset(${$var})) {
+							ob_start();
+							xdebug_debug_zval($var);
+							$info = ob_get_clean();
+							$__match__ = [];
+							preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+							$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+							if ((boolean)$info["is_ref"]) {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+							}
+						} else {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+						}
+					}
 					extract($phpbb_dispatcher->trigger_event('core.mcp_ban_before', compact($vars)));
 
 					if ($abort_ban)
@@ -126,6 +160,23 @@ class mcp_ban
 						'ban_reason',
 						'ban_give_reason',
 					);
+					foreach ($vars as $var) {
+						if(isset(${$var})) {
+							ob_start();
+							xdebug_debug_zval($var);
+							$info = ob_get_clean();
+							$__match__ = [];
+							preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+							$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+							if ((boolean)$info["is_ref"]) {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+							}
+						} else {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+						}
+					}
 					extract($phpbb_dispatcher->trigger_event('core.mcp_ban_after', compact($vars)));
 
 					trigger_error($user->lang['BAN_UPDATE_SUCCESSFUL'] . '<br /><br /><a href="' . $this->u_action . '">&laquo; ' . $user->lang['BACK_TO_PREV'] . '</a>');
@@ -151,6 +202,23 @@ class mcp_ban
 					* @since 3.1.0-RC5
 					*/
 					$vars = array('hidden_fields');
+					foreach ($vars as $var) {
+						if(isset(${$var})) {
+							ob_start();
+							xdebug_debug_zval($var);
+							$info = ob_get_clean();
+							$__match__ = [];
+							preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+							$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+							if ((boolean)$info["is_ref"]) {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+							}
+						} else {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+						}
+					}
 					extract($phpbb_dispatcher->trigger_event('core.mcp_ban_confirm', compact($vars)));
 
 					confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields($hidden_fields));

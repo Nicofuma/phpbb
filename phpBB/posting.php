@@ -101,6 +101,23 @@ $vars = array(
 	'mode',
 	'error',
 );
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.modify_posting_parameters', compact($vars)));
 
 // Was cancel pressed? If so then redirect to the appropriate page
@@ -389,6 +406,23 @@ $vars = array(
 	'error',
 	'is_authed',
 );
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.modify_posting_auth', compact($vars)));
 
 if (!$is_authed)
@@ -453,6 +487,23 @@ if ($mode == 'edit' && !$auth->acl_get('m_edit', $forum_id))
 		's_cannot_edit_locked',
 		's_cannot_edit_time',
 	);
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.posting_modify_cannot_edit_conditions', compact($vars)));
 
 	if (!$force_edit_allowed)
@@ -958,6 +1009,23 @@ if ($submit || $preview || $refresh)
 		'refresh',
 		'message_parser',
 	);
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.posting_modify_message_text', compact($vars)));
 
 	// Grab md5 'checksum' of new message
@@ -1277,6 +1345,23 @@ if ($submit || $preview || $refresh)
 		'submit',
 		'error',
 	);
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.posting_modify_submission_errors', compact($vars)));
 
 	// Store message, sync counters
@@ -1407,6 +1492,23 @@ if ($submit || $preview || $refresh)
 				'update_message',
 				'update_subject',
 			);
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.posting_modify_submit_post_before', compact($vars)));
 
 			// The last parameter tells submit_post if search indexer has to be run
@@ -1447,6 +1549,23 @@ if ($submit || $preview || $refresh)
 				'update_subject',
 				'redirect_url',
 			);
+			foreach ($vars as $var) {
+				if(isset(${$var})) {
+					ob_start();
+					xdebug_debug_zval($var);
+					$info = ob_get_clean();
+					$__match__ = [];
+					preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+					$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+					if ((boolean)$info["is_ref"]) {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+					}
+				} else {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+				}
+			}
 			extract($phpbb_dispatcher->trigger_event('core.posting_modify_submit_post_after', compact($vars)));
 
 			if ($config['enable_post_confirm'] && !$user->data['is_registered'] && (isset($captcha) && $captcha->is_solved() === true) && ($mode == 'post' || $mode == 'reply' || $mode == 'quote'))
@@ -1911,6 +2030,23 @@ $vars = array(
 	'page_data',
 	'message_parser',
 );
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.posting_modify_template_vars', compact($vars)));
 
 // Start assigning vars for main posting page ...

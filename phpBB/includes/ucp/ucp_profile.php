@@ -62,6 +62,23 @@ class ucp_profile
 				* @since 3.1.4-RC1
 				*/
 				$vars = array('data', 'submit');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.ucp_profile_reg_details_data', compact($vars)));
 
 				add_form_key('ucp_reg_details');
@@ -124,6 +141,23 @@ class ucp_profile
 					* @since 3.1.4-RC1
 					*/
 					$vars = array('data', 'submit', 'error');
+					foreach ($vars as $var) {
+						if(isset(${$var})) {
+							ob_start();
+							xdebug_debug_zval($var);
+							$info = ob_get_clean();
+							$__match__ = [];
+							preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+							$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+							if ((boolean)$info["is_ref"]) {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+							}
+						} else {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+						}
+					}
 					extract($phpbb_dispatcher->trigger_event('core.ucp_profile_reg_details_validate', compact($vars)));
 
 					if (!sizeof($error))
@@ -244,6 +278,23 @@ class ucp_profile
 						* @since 3.1.4-RC1
 						*/
 						$vars = array('data', 'sql_ary');
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.ucp_profile_reg_details_sql_ary', compact($vars)));
 
 						if (sizeof($sql_ary))
@@ -341,6 +392,23 @@ class ucp_profile
 				* @since 3.1.4-RC1
 				*/
 				$vars = array('data', 'submit');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.ucp_profile_modify_profile_info', compact($vars)));
 
 				add_form_key('ucp_profile_info');
@@ -388,6 +456,23 @@ class ucp_profile
 					* @since 3.1.4-RC1
 					*/
 					$vars = array('data', 'submit', 'error');
+					foreach ($vars as $var) {
+						if(isset(${$var})) {
+							ob_start();
+							xdebug_debug_zval($var);
+							$info = ob_get_clean();
+							$__match__ = [];
+							preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+							$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+							if ((boolean)$info["is_ref"]) {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+							}
+						} else {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+						}
+					}
 					extract($phpbb_dispatcher->trigger_event('core.ucp_profile_validate_profile_info', compact($vars)));
 
 					if (!sizeof($error))
@@ -421,6 +506,23 @@ class ucp_profile
 						* @since 3.1.4-RC1
 						*/
 						$vars = array('cp_data', 'data', 'sql_ary');
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.ucp_profile_info_modify_sql_ary', compact($vars)));
 
 						$sql = 'UPDATE ' . USERS_TABLE . '

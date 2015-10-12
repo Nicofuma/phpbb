@@ -190,6 +190,23 @@ switch ($mode)
 			'group_ids',
 			'teampage_data',
 		);
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.memberlist_team_modify_query', compact($vars)));
 
 		$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
@@ -339,6 +356,23 @@ switch ($mode)
 							'row',
 							'groups_ary',
 						);
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.memberlist_team_modify_template_vars', compact($vars)));
 
 						$template->assign_block_vars('group.user', $template_vars);
@@ -669,6 +703,23 @@ switch ($mode)
 			'foe',
 			'profile_fields',
 		);
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.memberlist_view_profile', compact($vars)));
 
 		$template->assign_vars(phpbb_show_profile($member, $user_notes_enabled, $warn_user_enabled));
@@ -1042,6 +1093,23 @@ switch ($mode)
 						'ips',
 						'sql',
 					);
+					foreach ($vars as $var) {
+						if(isset(${$var})) {
+							ob_start();
+							xdebug_debug_zval($var);
+							$info = ob_get_clean();
+							$__match__ = [];
+							preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+							$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+							if ((boolean)$info["is_ref"]) {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+							}
+						} else {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+						}
+					}
 					extract($phpbb_dispatcher->trigger_event('core.memberlist_modify_ip_search_sql_query', compact($vars)));
 
 					$result = $db->sql_query($sql);
@@ -1208,6 +1276,23 @@ switch ($mode)
 			'sql_where',
 			'sql_where_data',
 		);
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.memberlist_modify_sql_query_data', compact($vars)));
 
 		// Count the users ...

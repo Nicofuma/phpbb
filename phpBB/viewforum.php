@@ -418,6 +418,23 @@ $vars = array(
 	'sort_key',
 	'sort_dir',
 );
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.viewforum_get_topic_data', compact($vars)));
 
 $sql_approved = ' AND ' . $phpbb_content_visibility->get_visibility_sql('topic', $forum_id, 't.');
@@ -596,6 +613,23 @@ $vars = array(
 	'sql_where',
 	'store_reverse',
 );
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.viewforum_get_topic_ids_data', compact($vars)));
 
 $sql = $db->sql_build_query('SELECT', $sql_ary);
@@ -659,6 +693,23 @@ if (sizeof($shadow_topic_list))
 	* @since 3.1.0-a1
 	*/
 	$vars = array('sql_array');
+	foreach ($vars as $var) {
+		if(isset(${$var})) {
+			ob_start();
+			xdebug_debug_zval($var);
+			$info = ob_get_clean();
+			$__match__ = [];
+			preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+			$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+			if ((boolean)$info["is_ref"]) {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+			}
+		} else {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+		}
+	}
 	extract($phpbb_dispatcher->trigger_event('core.viewforum_get_shadowtopic_data', compact($vars)));
 
 	$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -737,6 +788,23 @@ $topic_tracking_info = $tracking_topics = array();
 * @since 3.1.0-b3
 */
 $vars = array('topic_list', 'rowset', 'total_topic_count');
+foreach ($vars as $var) {
+	if(isset(${$var})) {
+		ob_start();
+		xdebug_debug_zval($var);
+		$info = ob_get_clean();
+		$__match__ = [];
+		preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+		$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+		if ((boolean)$info["is_ref"]) {
+			file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+		}
+	} else {
+		file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+	}
+}
 extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
 
 // Okay, lets dump out the page ...
@@ -896,6 +964,23 @@ if (sizeof($topic_list))
 		* @since 3.1.0-a1
 		*/
 		$vars = array('row', 'topic_row');
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
 
 		$template->assign_block_vars('topicrow', $topic_row);
@@ -924,6 +1009,23 @@ if (sizeof($topic_list))
 			'topic_list',
 			'topic_row',
 		);
+		foreach ($vars as $var) {
+			if(isset(${$var})) {
+				ob_start();
+				xdebug_debug_zval($var);
+				$info = ob_get_clean();
+				$__match__ = [];
+				preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+				$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+				if ((boolean)$info["is_ref"]) {
+					file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+				}
+			} else {
+				file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+			}
+		}
 		extract($phpbb_dispatcher->trigger_event('core.viewforum_topic_row_after', compact($vars)));
 
 		if ($unread_topic)

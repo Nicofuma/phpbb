@@ -191,6 +191,23 @@ class acp_users
 				 * @since 3.1.3-RC1
 				 */
 				$vars = array('user_row', 'mode', 'action', 'submit', 'error');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_users_overview_before', compact($vars)));
 
 				if ($submit)
@@ -804,6 +821,23 @@ class acp_users
 							* @since 3.1.0-a1
 							*/
 							$vars = array('action', 'user_row');
+							foreach ($vars as $var) {
+								if(isset(${$var})) {
+									ob_start();
+									xdebug_debug_zval($var);
+									$info = ob_get_clean();
+									$__match__ = [];
+									preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+									$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+									if ((boolean)$info["is_ref"]) {
+										file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+									}
+								} else {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+								}
+							}
 							extract($phpbb_dispatcher->trigger_event('core.acp_users_overview_run_quicktool', compact($vars)));
 						break;
 					}
@@ -926,6 +960,23 @@ class acp_users
 						* @since 3.1.0-a1
 						*/
 						$vars = array('user_row', 'data', 'sql_ary');
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.acp_users_overview_modify_data', compact($vars)));
 
 						if ($update_username !== false)
@@ -1053,6 +1104,23 @@ class acp_users
 				* @since 3.1.0-a1
 				*/
 				$vars = array('user_row', 'quick_tool_ary');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_users_display_overview', compact($vars)));
 
 				$s_action_options = '<option class="sep" value="">' . $user->lang['SELECT_OPTION'] . '</option>';
@@ -1441,6 +1509,23 @@ class acp_users
 				* @since 3.1.4-RC1
 				*/
 				$vars = array('data', 'submit', 'user_id', 'user_row');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_users_modify_profile', compact($vars)));
 
 				if ($submit)
@@ -1477,6 +1562,23 @@ class acp_users
 					* @since 3.1.4-RC1
 					*/
 					$vars = array('submit', 'data', 'error');
+					foreach ($vars as $var) {
+						if(isset(${$var})) {
+							ob_start();
+							xdebug_debug_zval($var);
+							$info = ob_get_clean();
+							$__match__ = [];
+							preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+							$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+							if ((boolean)$info["is_ref"]) {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+							}
+						} else {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+						}
+					}
 					extract($phpbb_dispatcher->trigger_event('core.acp_users_profile_validate', compact($vars)));
 
 					if (!sizeof($error))
@@ -1498,6 +1600,23 @@ class acp_users
 						* @since 3.1.4-RC1
 						*/
 						$vars = array('cp_data', 'data', 'user_id', 'user_row', 'sql_ary');
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.acp_users_profile_modify_sql_ary', compact($vars)));
 
 						$sql = 'UPDATE ' . USERS_TABLE . '
@@ -1601,6 +1720,23 @@ class acp_users
 				* @since 3.1.0-b3
 				*/
 				$vars = array('data', 'user_row');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_users_prefs_modify_data', compact($vars)));
 
 				if ($submit)
@@ -1670,6 +1806,23 @@ class acp_users
 						* @since 3.1.0-b3
 						*/
 						$vars = array('data', 'user_row', 'sql_ary', 'error');
+						foreach ($vars as $var) {
+							if(isset(${$var})) {
+								ob_start();
+								xdebug_debug_zval($var);
+								$info = ob_get_clean();
+								$__match__ = [];
+								preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+								$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+								if ((boolean)$info["is_ref"]) {
+									file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+								}
+							} else {
+								file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+							}
+						}
 						extract($phpbb_dispatcher->trigger_event('core.acp_users_prefs_modify_sql', compact($vars)));
 
 						if (!sizeof($error))
@@ -1819,6 +1972,23 @@ class acp_users
 				* @since 3.1.0-b3
 				*/
 				$vars = array('data', 'user_row', 'user_prefs_data');
+				foreach ($vars as $var) {
+					if(isset(${$var})) {
+						ob_start();
+						xdebug_debug_zval($var);
+						$info = ob_get_clean();
+						$__match__ = [];
+						preg_match("(\(refcount=(\d+), is_ref=(\d+)\))", $info, $__match__);
+						$info = array("refcount" => $__match__[1], "is_ref" => $__match__[2]);
+						if ((boolean)$info["is_ref"]) {
+							file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is a reference
+", FILE_APPEND);
+						}
+					} else {
+						file_put_contents("/tmp/event_refs", __FILE__ . ":" . __LINE__ . " => " . $var . " is not defined
+", FILE_APPEND);
+					}
+				}
 				extract($phpbb_dispatcher->trigger_event('core.acp_users_prefs_modify_template_data', compact($vars)));
 
 				$template->assign_vars($user_prefs_data);
