@@ -379,6 +379,7 @@ class router implements RouterInterface
 				$content = $dumper->dump($options);
 				$this->temp4[] = $content;
 				$cache->write($content, $this->get_routes()->getResources());
+				opcache_invalidate($cache->getPath(), true);
 			}
 
 			require_once($cache->getPath());
