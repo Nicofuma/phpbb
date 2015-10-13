@@ -253,7 +253,15 @@ class router implements RouterInterface
 	 */
 	public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
 	{
-		return $this->get_generator()->generate($name, $parameters, $referenceType);
+		try
+		{
+
+			return $this->get_generator()->generate($name, $parameters, $referenceType);
+		}
+		catch (\Exception $e) {
+			dump($this->loader);
+			throw $e;
+		}
 	}
 
 	/**
