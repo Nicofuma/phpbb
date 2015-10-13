@@ -115,13 +115,40 @@ class router implements RouterInterface
 	 *
 	 * @return RouteCollection Get the route collection
 	 */
+	// public function get_routes()
+	// {
+	// 	if ($this->route_collection === null || $this->route_collection->count() === 0)
+	// 	{
+	// 		$this->route_collection = new RouteCollection;
+			
+	// 		foreach ($this->resources_locator->locate_resources() as $resource)
+	// 		{
+	// 			if (is_array($resource))
+	// 			{
+	// 				$this->route_collection->addCollection($this->loader->load($resource[0], $resource[1]));
+	// 			}
+	// 			else
+	// 			{
+	// 				$this->route_collection->addCollection($this->loader->load($resource));
+	// 			}
+	// 		}
+
+	// 		$this->resolveParameters($this->route_collection);
+	// 	}
+
+	// 	return $this->route_collection;
+	// }
 	public function get_routes()
 	{
-		if ($this->route_collection === null || $this->route_collection->count() === 0)
+		dump('GET ROUTES', $this->route_collection);
+		debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		if ($this->route_collection === null /*|| $this->route_collection->count() === 0*/)
 		{
+			dump('GENERATE COLLECTION');
 			$this->route_collection = new RouteCollection;
-			
-			foreach ($this->resources_locator->locate_resources() as $resource)
+			$resources = $this->resources_locator->locate_resources();
+			dump($resources);
+			foreach ($resources as $resource)
 			{
 				if (is_array($resource))
 				{
@@ -134,11 +161,13 @@ class router implements RouterInterface
 			}
 
 			$this->resolveParameters($this->route_collection);
+			dump('GENERATED ROUTES', $this->route_collection);
 		}
+		dump('LEAVE');
 
 		return $this->route_collection;
 	}
-
+	
 	/**
 	 * {@inheritdoc}
 	 */
