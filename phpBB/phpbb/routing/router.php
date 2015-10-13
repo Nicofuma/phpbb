@@ -138,16 +138,27 @@ class router implements RouterInterface
 
 	// 	return $this->route_collection;
 	// }
+	public function dump_line($line)
+    {
+        file_put_contents('/tmp/test.html', $line, FILE_APPEND);
+    }
+    
 	public function get_routes()
 	{
-		dump('GET ROUTES', $this->route_collection);
+	    $cloner = new VarCloner();
+        $dumper = new HtmlDumper([$this, 'dump_line']);
+        
+		$dumper->dump('GET ROUTES', $this->route_collection);
+		ob_start();
 		debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		$trace = ob_get_clean();
+		$this->dump_line($trace);
 		if ($this->route_collection === null /*|| $this->route_collection->count() === 0*/)
 		{
-			dump('GENERATE COLLECTION');
+			$dumper->dump('GENERATE COLLECTION');
 			$this->route_collection = new RouteCollection;
 			$resources = $this->resources_locator->locate_resources();
-			dump($resources);
+			$dumper->dump($resources);
 			foreach ($resources as $resource)
 			{
 				if (is_array($resource))
@@ -161,13 +172,12 @@ class router implements RouterInterface
 			}
 
 			$this->resolveParameters($this->route_collection);
-			dump('GENERATED ROUTES', $this->route_collection);
+			$dumper->dump('GENERATED ROUTES', $this->route_collection);
 		}
-		dump('LEAVE');
+		$dumper->dump('LEAVE');
 
 		return $this->route_collection;
-	}
-	
+	}	
 	/**
 	 * {@inheritdoc}
 	 */
