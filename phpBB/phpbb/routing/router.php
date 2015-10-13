@@ -350,6 +350,8 @@ class router implements RouterInterface
 	 */
 	protected function create_dumped_url_generator()
 	{
+		dump('CREATE DUMPED URL GENERATOR');
+		debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		try
 		{
 			$cache = new ConfigCache("{$this->phpbb_root_path}cache/{$this->environment}/url_generator.{$this->php_ext}", defined('DEBUG'));
@@ -380,6 +382,8 @@ class router implements RouterInterface
 	 */
 	protected function create_new_url_generator()
 	{
+		dump('CREATE DYNAMIC URL GENERATOR');
+		debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		$this->generator = new UrlGenerator($this->get_routes(), $this->context);
 	}
 
