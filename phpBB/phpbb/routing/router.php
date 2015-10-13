@@ -27,8 +27,6 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 /**
  * Integration of all pieces of the routing system for easier use.
@@ -145,10 +143,10 @@ class router implements RouterInterface
         file_put_contents('/tmp/test.html', $line, FILE_APPEND);
     }
 
-	public function get_routes()
+	/*public function get_routes()
 	{
-	    $cloner = new VarCloner();
-        $dumper = new HtmlDumper([$this, 'dump_line']);
+		$cloner = new VarCloner();
+		$dumper = new HtmlDumper([$this, 'dump_line']);
 
 		$dumper->dump($cloner->cloneVar('GET ROUTES'));
 		$dumper->dump($cloner->cloneVar($this->route_collection));
@@ -157,7 +155,7 @@ class router implements RouterInterface
 		debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		$trace = ob_get_clean();
 		$this->dump_line($cloner->cloneVar($trace));
-		if ($this->route_collection === null /*|| $this->route_collection->count() === 0*/)
+		if ($this->route_collection === null / *|| $this->route_collection->count() === 0* /)
 		{
 			$dumper->dump($cloner->cloneVar('GENERATE COLLECTION'));
 			$this->route_collection = new RouteCollection;
@@ -179,6 +177,41 @@ class router implements RouterInterface
 			$dumper->dump($cloner->cloneVar('GENERATED ROUTES', $this->route_collection));
 		}
 		$dumper->dump($cloner->cloneVar('LEAVE'));
+
+		return $this->route_collection;
+	}*/
+
+	public function get_routes()
+	{
+		if ($this->route_collection === null)
+		{
+			$this->route_collection = new RouteCollection;
+			$resources = $this->resources_locator->locate_resources();
+
+			foreach ($resources as $resource)
+			{
+				if (is_array($resource))
+				{
+					$this->route_collection->addCollection($this->loader->load($resource[0], $resource[1]));
+				}
+				else
+				{
+					$this->route_collection->addCollection($this->loader->load($resource));
+				}
+			}
+
+			$this->resolveParameters($this->route_collection);
+		}
+
+		if ($this->route_collection === null || $this->route_collection->count() === 0)
+		{
+			dump('GET ROUTES', $this->route_collection);
+			ob_start();
+			debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+			$trace = ob_get_clean();
+			dump($trace);
+			dump('LEAVE');
+		}
 
 		return $this->route_collection;
 	}
