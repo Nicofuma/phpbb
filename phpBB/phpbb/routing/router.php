@@ -311,9 +311,8 @@ class router implements RouterInterface
 					'class'      => 'phpbb_url_matcher',
 					'base_class' => 'Symfony\\Component\\Routing\\Matcher\\UrlMatcher',
 				);
-$content = $dumper->dump($options), $this->get_routes()->getResources();
-				$this->temp4 = $content;
-				$cache->write($content);
+
+				$cache->write($dumper->dump($options), $this->get_routes()->getResources());
 			}
 
 			require_once($cache->getPath());
@@ -375,7 +374,9 @@ $content = $dumper->dump($options), $this->get_routes()->getResources();
 					'base_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator',
 				);
 
-				$cache->write($dumper->dump($options), $this->get_routes()->getResources());
+				$content = $dumper->dump($options), $this->get_routes()->getResources();
+				$this->temp4 = $content;
+				$cache->write($content);
 			}
 
 			require_once($cache->getPath());
