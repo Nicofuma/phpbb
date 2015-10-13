@@ -261,7 +261,8 @@ class router implements RouterInterface
 		catch (\Exception $e) {
 			dump($this->temp1);
 			dump($this->temp2);
-			print($this->temp3);
+			foreach ($this->temp3 as $temp)
+				print($temp);
 			dump($this->temp5);
 			/*dump($this->get_generator());
 			dump($this->loader);
