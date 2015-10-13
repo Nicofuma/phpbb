@@ -262,9 +262,10 @@ class router implements RouterInterface
 			dump($this->temp1);
 			dump($this->temp2);
 			print($this->temp3);
-			dump($this->get_generator());
+			dump($this->temp5);
+			/*dump($this->get_generator());
 			dump($this->loader);
-			dump($this->get_routes());
+			dump($this->get_routes());*/
 			dump($this->temp4);
 			throw $e;
 		}
@@ -364,8 +365,8 @@ class router implements RouterInterface
 				$routes = $this->get_routes();
 				ob_start();
 				debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-				$this->temp1 = ob_get_clean();
-				$this->temp2 = $routes;
+				$this->temp1[] = ob_get_clean();
+				$this->temp2[] = $routes;
 
 				$dumper = new PhpGeneratorDumper($routes);
 
@@ -375,7 +376,7 @@ class router implements RouterInterface
 				);
 
 				$content = $dumper->dump($options);
-				$this->temp4 = $content;
+				$this->temp4[] = $content;
 				$cache->write($content, $this->get_routes()->getResources());
 			}
 
@@ -384,7 +385,8 @@ class router implements RouterInterface
 			$this->generator = new \phpbb_url_generator($this->context);
 			ob_start();
 			dump($this->generator);
-			$this->temp3 = ob_get_clean();
+			$this->temp3[] = ob_get_clean();
+			$this->temp5[] = file_get_contents($cache->getPath());
 		}
 		catch (IOException $e)
 		{
