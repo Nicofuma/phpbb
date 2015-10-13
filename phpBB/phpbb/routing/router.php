@@ -374,9 +374,9 @@ class router implements RouterInterface
 					'base_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator',
 				);
 
-				$content = $dumper->dump($options), $this->get_routes()->getResources();
+				$content = $dumper->dump($options);
 				$this->temp4 = $content;
-				$cache->write($content);
+				$cache->write($content, $this->get_routes()->getResources());
 			}
 
 			require_once($cache->getPath());
