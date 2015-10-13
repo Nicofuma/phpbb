@@ -259,6 +259,8 @@ class router implements RouterInterface
 			return $this->get_generator()->generate($name, $parameters, $referenceType);
 		}
 		catch (\Exception $e) {
+			dump($this->temp1);
+			dump($this->temp2);
 			dump($this->get_generator());
 			dump($this->loader);
 			dump($this->get_routes());
@@ -356,7 +358,14 @@ class router implements RouterInterface
 			$cache = new ConfigCache("{$this->phpbb_root_path}cache/{$this->environment}/url_generator.{$this->php_ext}", defined('DEBUG'));
 			if (!$cache->isFresh())
 			{
-				$dumper = new PhpGeneratorDumper($this->get_routes());
+
+				$routes = $this->get_routes();
+				ob_start();
+				debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+				$this->temp1 = ob_get_clean();
+				$this->temp2 = $routes;
+
+				$dumper = new PhpGeneratorDumper($routes);
 
 				$options = array(
 					'class'      => 'phpbb_url_generator',
