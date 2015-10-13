@@ -259,8 +259,9 @@ class router implements RouterInterface
 			return $this->get_generator()->generate($name, $parameters, $referenceType);
 		}
 		catch (\Exception $e) {
-			dump($this->get_routes());
+			dump($this->get_generator());
 			dump($this->loader);
+			dump($this->get_routes());
 			throw $e;
 		}
 	}
