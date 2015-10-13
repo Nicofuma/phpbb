@@ -261,9 +261,11 @@ class router implements RouterInterface
 		catch (\Exception $e) {
 			dump($this->temp1);
 			dump($this->temp2);
+			dump($this->temp3);
 			dump($this->get_generator());
 			dump($this->loader);
 			dump($this->get_routes());
+			dump($this->temp4);
 			throw $e;
 		}
 	}
@@ -309,8 +311,9 @@ class router implements RouterInterface
 					'class'      => 'phpbb_url_matcher',
 					'base_class' => 'Symfony\\Component\\Routing\\Matcher\\UrlMatcher',
 				);
-
-				$cache->write($dumper->dump($options), $this->get_routes()->getResources());
+$content = $dumper->dump($options), $this->get_routes()->getResources();
+				$this->temp4 = $content;
+				$cache->write($content);
 			}
 
 			require_once($cache->getPath());
@@ -378,6 +381,9 @@ class router implements RouterInterface
 			require_once($cache->getPath());
 
 			$this->generator = new \phpbb_url_generator($this->context);
+			ob_start();
+			dump($this->generator);
+			$this->temp3 = ob_get_clean();
 		}
 		catch (IOException $e)
 		{
