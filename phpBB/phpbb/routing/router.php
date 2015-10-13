@@ -27,6 +27,8 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 /**
  * Integration of all pieces of the routing system for easier use.
@@ -120,7 +122,7 @@ class router implements RouterInterface
 	// 	if ($this->route_collection === null || $this->route_collection->count() === 0)
 	// 	{
 	// 		$this->route_collection = new RouteCollection;
-			
+
 	// 		foreach ($this->resources_locator->locate_resources() as $resource)
 	// 		{
 	// 			if (is_array($resource))
@@ -142,23 +144,25 @@ class router implements RouterInterface
     {
         file_put_contents('/tmp/test.html', $line, FILE_APPEND);
     }
-    
+
 	public function get_routes()
 	{
 	    $cloner = new VarCloner();
         $dumper = new HtmlDumper([$this, 'dump_line']);
-        
-		$dumper->dump('GET ROUTES', $this->route_collection);
+
+		$dumper->dump($cloner->cloneVar('GET ROUTES'));
+		$dumper->dump($cloner->cloneVar($this->route_collection));
+
 		ob_start();
 		debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		$trace = ob_get_clean();
-		$this->dump_line($trace);
+		$this->dump_line($cloner->cloneVar($trace));
 		if ($this->route_collection === null /*|| $this->route_collection->count() === 0*/)
 		{
-			$dumper->dump('GENERATE COLLECTION');
+			$dumper->dump($cloner->cloneVar('GENERATE COLLECTION'));
 			$this->route_collection = new RouteCollection;
 			$resources = $this->resources_locator->locate_resources();
-			$dumper->dump($resources);
+			$dumper->dump($cloner->cloneVar($resources));
 			foreach ($resources as $resource)
 			{
 				if (is_array($resource))
@@ -172,12 +176,12 @@ class router implements RouterInterface
 			}
 
 			$this->resolveParameters($this->route_collection);
-			$dumper->dump('GENERATED ROUTES', $this->route_collection);
+			$dumper->dump($cloner->cloneVar('GENERATED ROUTES', $this->route_collection));
 		}
-		$dumper->dump('LEAVE');
+		$dumper->dump($cloner->cloneVar('LEAVE'));
 
 		return $this->route_collection;
-	}	
+	}
 	/**
 	 * {@inheritdoc}
 	 */
@@ -295,7 +299,7 @@ class router implements RouterInterface
 		}
 
 		$this->create_dumped_url_generator();
-		
+
 		return $this->generator;
 	}
 
@@ -310,7 +314,7 @@ class router implements RouterInterface
 			if (!$cache->isFresh())
 			{
 				$dumper = new PhpGeneratorDumper($this->get_routes());
-				
+
 				$options = array(
 					'class'      => 'phpbb_url_generator',
 					'base_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator',
