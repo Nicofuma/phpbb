@@ -185,7 +185,7 @@ class router implements RouterInterface
 	{
 		if ($this->route_collection === null)
 		{
-			$this->route_collection = new RouteCollection;
+			$this->route_collection = new RouteCollection();
 			$resources = $this->resources_locator->locate_resources();
 
 			foreach ($resources as $resource)
