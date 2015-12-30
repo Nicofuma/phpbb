@@ -11,8 +11,9 @@
 *
 */
 
-/**
-*/
+use phpbb\kernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
 * @ignore
@@ -38,8 +39,8 @@ if (!defined('PHPBB_ENVIRONMENT'))
 	@define('PHPBB_ENVIRONMENT', 'production');
 }
 
-$kernel = new \phpbb\kernel($phpbb_config_php_file, $phpbb_root_path, $phpEx, PHPBB_ENVIRONMENT, DEBUG);
-$kernel->boot();
+$phpbb_kernel = new kernel($phpbb_config_php_file, $phpbb_root_path, $phpEx, PHPBB_ENVIRONMENT, DEBUG);
+$phpbb_kernel->boot();
 
 // Start session management
 $user->session_begin();
@@ -51,16 +52,17 @@ $symfony_request = $phpbb_container->get('symfony_request');
 
 try
 {
-	$response = $kernel->handle($symfony_request);
+	$response = $phpbb_kernel->handle($symfony_request, HttpKernelInterface::MASTER_REQUEST, false);
 }
-catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e)
+catch (NotFoundHttpException $e)
 {
 	// handle legacy
-	$legacyHandler = $kernel->get_container()->get('legacy.handler');
-	if (!$response = $legacyHandler->parse($symfony_request))
+	$legacyHandler = $phpbb_kernel->get_container()->get('legacy.handler');
+	$response = $legacyHandler->parse($symfony_request);
+	if (!$response)
 	{
 		$legacyHandler->bootLegacy();
-		$logger = $kernel->get_container()->get('logger');
+
 		try
 		{
 			require_once $legacyHandler->getLegacyPath();
@@ -76,4 +78,4 @@ catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e)
 }
 
 $response->send();
-$kernel->terminate($symfony_request, $response);
+$phpbb_kernel->terminate($symfony_request, $response);
