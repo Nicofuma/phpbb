@@ -88,8 +88,6 @@ function send_avatar_to_browser($file, $browser)
 				fclose($fp);
 			}
 		}
-
-		flush();
 	}
 	else
 	{
@@ -212,7 +210,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 	}
 
 	// Close the db connection before sending the file etc.
-	file_gc(false);
+	file_gc();
 
 	if (!set_modified_headers($attachment['filetime'], $user->browser))
 	{
@@ -223,7 +221,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 		{
 			// X-Accel-Redirect - http://wiki.nginx.org/XSendfile
 			header('X-Accel-Redirect: ' . $user->page['root_script_path'] . $upload_dir . '/' . $attachment['physical_filename']);
-			exit;
+			return;
 		}
 		else if (defined('PHPBB_ENABLE_X_SENDFILE') && PHPBB_ENABLE_X_SENDFILE && !phpbb_http_byte_range($size))
 		{
@@ -231,7 +229,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 			// Lighttpd's X-Sendfile does not support range requests as of 1.4.26
 			// and always requires an absolute path.
 			header('X-Sendfile: ' . dirname(__FILE__) . "/../$upload_dir/{$attachment['physical_filename']}");
-			exit;
+			return;
 		}
 
 		if ($size)
@@ -266,11 +264,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 		{
 			@readfile($filename);
 		}
-
-		flush();
 	}
-
-	exit;
 }
 
 /**
@@ -440,7 +434,7 @@ function set_modified_headers($stamp, $browser)
 *
 * @return null
 */
-function file_gc($exit = true)
+function file_gc()
 {
 	global $cache, $db;
 
@@ -450,11 +444,6 @@ function file_gc($exit = true)
 	}
 
 	$db->sql_close();
-
-	if ($exit)
-	{
-		exit;
-	}
 }
 
 /**

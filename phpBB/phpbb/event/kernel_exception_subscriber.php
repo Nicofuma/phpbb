@@ -59,6 +59,11 @@ class kernel_exception_subscriber implements EventSubscriberInterface
 		$exception = $event->getException();
 
 		$message = $exception->getMessage();
+		if ($exception instanceof \Exception) {
+			$event->setResponse(new JsonResponse(json_decode($message)));
+			$event->stopPropagation();
+			return;
+		}
 
 		if ($exception instanceof \phpbb\exception\exception_interface)
 		{
@@ -111,7 +116,7 @@ class kernel_exception_subscriber implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			KernelEvents::EXCEPTION		=> 'on_kernel_exception',
+			KernelEvents::EXCEPTION		=> ['on_kernel_exception', 10024],
 		);
 	}
 }
