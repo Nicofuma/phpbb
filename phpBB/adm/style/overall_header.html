@@ -7,7 +7,7 @@
 <!-- IF META -->{META}<!-- ENDIF -->
 <title>{PAGE_TITLE}</title>
 
-<link href="style/admin.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="screen" />
+<link href="{ADMIN_ROOT_PATH}style/admin.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="screen" />
 
 <script type="text/javascript">
 // <![CDATA[
@@ -148,7 +148,6 @@ function popup(url, width, height, name)
 					<div id="main">
 						<div class="main">
 							{% if CONTAINER_EXCEPTION !== false and CONTAINER_EXCEPTION !== null %}
-							{{ dump(CONTAINER_EXCEPTION) }}
 							<div class="errorbox">
 								<p>{{ lang('CONTAINER_EXCEPTION') }}</p><br />
 								<p>{{ lang('EXCEPTION') }}{{ lang('COLON') }} {{ CONTAINER_EXCEPTION.getMessage() }}</p>

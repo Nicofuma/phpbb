@@ -66,6 +66,16 @@ function adm_page_header($page_title)
 		}
 	}
 
+	// Determine board url - we may need it later
+	$board_url = generate_board_url() . '/';
+	// This path is sent with the base template paths in the assign_vars()
+	// call below. We need to correct it in case we are accessing from a
+	// controller because the web paths will be incorrect otherwise.
+	/* @var $phpbb_path_helper \phpbb\path_helper */
+	$phpbb_path_helper = $phpbb_container->get('path_helper');
+	$corrected_path = $phpbb_path_helper->get_web_root_path();
+	$web_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? $board_url : $corrected_path;
+
 	$template->assign_vars(array(
 		'PAGE_TITLE'			=> $page_title,
 		'USERNAME'				=> $user->data['username'],
@@ -74,20 +84,20 @@ function adm_page_header($page_title)
 		'_SID'					=> $_SID,
 		'SESSION_ID'			=> $user->session_id,
 		'ROOT_PATH'				=> $phpbb_root_path,
-		'ADMIN_ROOT_PATH'		=> $phpbb_admin_path,
+		'ADMIN_ROOT_PATH'		=> "{$web_path}{$phpbb_admin_path}",
 
 		'U_LOGOUT'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=logout'),
 		'U_ADM_LOGOUT'			=> append_sid("{$phpbb_admin_path}index.$phpEx", 'action=admlogout'),
 		'U_ADM_INDEX'			=> append_sid("{$phpbb_admin_path}index.$phpEx"),
 		'U_INDEX'				=> append_sid("{$phpbb_root_path}index.$phpEx"),
 
-		'T_IMAGES_PATH'			=> "{$phpbb_root_path}images/",
-		'T_SMILIES_PATH'		=> "{$phpbb_root_path}{$config['smilies_path']}/",
-		'T_AVATAR_PATH'			=> "{$phpbb_root_path}{$config['avatar_path']}/",
-		'T_AVATAR_GALLERY_PATH'	=> "{$phpbb_root_path}{$config['avatar_gallery_path']}/",
-		'T_ICONS_PATH'			=> "{$phpbb_root_path}{$config['icons_path']}/",
-		'T_RANKS_PATH'			=> "{$phpbb_root_path}{$config['ranks_path']}/",
-		'T_UPLOAD_PATH'			=> "{$phpbb_root_path}{$config['upload_path']}/",
+		'T_IMAGES_PATH'			=> "{$web_path}images/",
+		'T_SMILIES_PATH'		=> "{$web_path}{$config['smilies_path']}/",
+		'T_AVATAR_PATH'			=> "{$web_path}{$config['avatar_path']}/",
+		'T_AVATAR_GALLERY_PATH'	=> "{$web_path}{$config['avatar_gallery_path']}/",
+		'T_ICONS_PATH'			=> "{$web_path}{$config['icons_path']}/",
+		'T_RANKS_PATH'			=> "{$web_path}{$config['ranks_path']}/",
+		'T_UPLOAD_PATH'			=> "{$web_path}{$config['upload_path']}/",
 
 		'T_ASSETS_VERSION'		=> $config['assets_version'],
 
