@@ -3368,7 +3368,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 		case E_USER_NOTICE:
 
 			define('IN_ERROR_HANDLER', true);
-/*
+
 			if (empty($user->data))
 			{
 				$user->session_begin();
@@ -3380,16 +3380,11 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 			if (!$user->is_setup())
 			{
 				$user->setup();
-			}*/
+			}
 
 			if ($msg_text == 'ERROR_NO_ATTACHMENT' || $msg_text == 'NO_FORUM' || $msg_text == 'NO_TOPIC' || $msg_text == 'NO_USER')
 			{
 				throw new \phpbb\exception\http_exception(404, $msg_text);
-				//send_status_line(404, 'Not Found');
-			}
-			else
-			{
-				throw new \phpbb\exception\runtime_exception($msg_text);
 			}
 
 			$msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
@@ -3445,6 +3440,8 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 			}
 
 			exit_handler();
+
+			throw new \phpbb\legacy\exception\exit_exception();
 		break;
 
 		// PHP4 compatibility
