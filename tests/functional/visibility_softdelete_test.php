@@ -669,11 +669,11 @@ class phpbb_functional_visibility_softdelete_test extends phpbb_functional_test_
 		$bookmark_tag = $crawler->filter('a.bookmark-link');
 		$this->assertContainsLang('BOOKMARK_TOPIC', $bookmark_tag->text());
 		$bookmark_link = $bookmark_tag->attr('href');
-		$crawler_bookmark = self::request('GET', $bookmark_link);
+		$crawler_bookmark = self::request('GET', $bookmark_link, true, true);
 		$this->assertContainsLang('BOOKMARK_ADDED', $crawler_bookmark->text());
 
 		$this->add_lang('mcp');
-		$crawler = $this->get_quickmod_page($this->data['topics']['Soft Delete Topic #2'], 'MERGE_TOPIC', $crawler); 
+		$crawler = $this->get_quickmod_page($this->data['topics']['Soft Delete Topic #2'], 'MERGE_TOPIC', $crawler);
 		$this->assertContainsLang('SELECT_MERGE', $crawler->text());
 
 		$crawler = self::request('GET', "mcp.php?f={$this->data['forums']['Soft Delete #1']}&t={$this->data['topics']['Soft Delete Topic #2']}&i=main&mode=forum_view&action=merge_topic&to_topic_id={$this->data['topics']['Soft Delete Topic #1']}");
