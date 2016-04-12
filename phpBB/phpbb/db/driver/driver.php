@@ -1075,7 +1075,7 @@ abstract class driver implements driver_interface
 					</body>
 					</html>';
 
-				exit_handler();
+				throw new \phpbb\legacy\exception\exit_exception();
 
 			break;
 

@@ -1282,8 +1282,7 @@ class session
 			if (defined('IN_CRON'))
 			{
 				garbage_collection();
-				exit_handler();
-				exit;
+				throw new \phpbb\legacy\exception\exit_exception();
 			}
 
 			trigger_error($message);

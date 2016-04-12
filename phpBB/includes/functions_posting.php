@@ -2470,7 +2470,7 @@ function phpbb_upload_popup($forum_style = 0)
 	$template->display('popup');
 
 	garbage_collection();
-	exit_handler();
+	throw new \phpbb\legacy\exception\exit_exception();
 }
 
 /**
