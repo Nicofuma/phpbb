@@ -13,6 +13,7 @@
 
 namespace phpbb\event;
 
+use phpbb\language\translate_exception_trait;
 use phpbb\legacy\exception\exit_exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class kernel_exception_subscriber implements EventSubscriberInterface
 {
+	use translate_exception_trait;
+
 	/**
 	* Template object
 	*
@@ -59,17 +62,12 @@ class kernel_exception_subscriber implements EventSubscriberInterface
 	{
 		$exception = $event->getException();
 
-		if ($exception instanceof exit_exception)
+		if (true)//$exception instanceof exit_exception)
 		{
 			throw $exception;
 		}
 
-		$message = $exception->getMessage();
-
-		if ($exception instanceof \phpbb\exception\exception_interface)
-		{
-			$message = $this->language->lang_array($message, $exception->get_parameters());
-		}
+		$message = $this->get_exception_message($this->language, $exception);
 
 		if (!$event->getRequest()->isXmlHttpRequest())
 		{

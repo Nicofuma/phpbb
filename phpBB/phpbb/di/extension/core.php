@@ -17,6 +17,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -71,26 +72,8 @@ class core extends Extension
 			}
 		}
 
-		// Set the Twig options if defined in the environment
-		$definition = $container->getDefinition('template.twig.environment');
-		$twig_environment_options = $definition->getArgument(static::TWIG_OPTIONS_POSITION);
-		if ($config['twig']['debug'])
-		{
-			$twig_environment_options['debug'] = true;
-		}
-		if ($config['twig']['auto_reload'])
-		{
-			$twig_environment_options['auto_reload'] = true;
-		}
-
-		// Replace the 7th argument, the options passed to the environment
-		$definition->replaceArgument(static::TWIG_OPTIONS_POSITION, $twig_environment_options);
-
-		if ($config['twig']['enable_debug_extension'])
-		{
-			$definition = $container->getDefinition('template.twig.extensions.debug');
-			$definition->addTag('twig.extension');
-		}
+		$this->registerTwigConfiguration($container, $config['twig']);
+		$this->registerSessionConfiguration($container, $config['session']);
 
 		// Set the debug options
 		foreach ($config['debug'] as $name => $value)
@@ -120,5 +103,84 @@ class core extends Extension
 	public function getAlias()
 	{
 		return 'core';
+	}
+
+	/**
+	 * Loads the Twig configuration
+	 *
+	 * @param ContainerBuilder $container
+	 * @param array $config
+	 */
+	private function registerTwigConfiguration(ContainerBuilder $container, array $config)
+	{
+		$definition = $container->getDefinition('template.twig.environment');
+		$twig_environment_options = $definition->getArgument(static::TWIG_OPTIONS_POSITION);
+		if ($config['debug'])
+		{
+			$twig_environment_options['debug'] = true;
+		}
+		
+		if ($config['auto_reload'])
+		{
+			$twig_environment_options['auto_reload'] = true;
+		}
+
+		// Replace the argument holding the options passed to the environment
+		$definition->replaceArgument(static::TWIG_OPTIONS_POSITION, $twig_environment_options);
+
+		if ($config['enable_debug_extension'])
+		{
+			$definition = $container->getDefinition('template.twig.extensions.debug');
+			$definition->addTag('twig.extension');
+		}
+	}
+
+	/**
+	 * Loads the session configuration.
+	 *
+	 * @param ContainerBuilder $container A ContainerBuilder instance
+	 * @param array $config A session configuration array
+	 */
+	private function registerSessionConfiguration( ContainerBuilder $container, array $config)
+	{
+		// session storage
+		$container->setAlias('session.storage', $config['storage_id']);
+		$options = array();
+		foreach (array('name', 'cookie_lifetime', 'cookie_path', 'cookie_domain', 'cookie_secure', 'cookie_httponly', 'use_cookies', 'gc_maxlifetime', 'gc_probability', 'gc_divisor') as $key)
+		{
+			if (isset($config[$key]))
+			{
+				$options[$key] = $config[$key];
+			}
+		}
+
+		if (isset($options['name']))
+		{
+			$container->setParameter('session.cookie_name', $options['name']);
+		}
+
+		$container->setParameter('session.storage.options', $options);
+
+		// session handler (the internal callback registered with PHP session management)
+		if (null === $config['handler_id'])
+		{
+			// Set the handler class to be null
+			$container->getDefinition('session.storage.native')->replaceArgument(1, null);
+		}
+		else
+		{
+			$handlerId = $config['handler_id'];
+
+			if ($config['metadata_update_threshold'] > 0)
+			{
+				$container->getDefinition('session.handler.write_check')->addArgument(new Reference($handlerId));
+				$handlerId = 'session.handler.write_check';
+			}
+
+			$container->setAlias('session.handler', $handlerId);
+		}
+
+		$container->setParameter('session.save_path', $config['save_path']);
+		$container->setParameter('session.metadata.update_threshold', $config['metadata_update_threshold']);
 	}
 }

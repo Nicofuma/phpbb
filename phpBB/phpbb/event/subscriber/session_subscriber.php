@@ -13,49 +13,68 @@
 
 namespace phpbb\event\subscriber;
 
-use phpbb\auth\auth;
-use phpbb\user;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionListener;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class session_subscriber implements EventSubscriberInterface
+/**
+ * Sets the session in the request.
+ */
+class session_subscriber extends BaseSessionListener
 {
-	/** @var user */
-	protected $user;
-
-	/** @var auth */
-	private $auth;
-
 	/**
-	 * Construct method
-	 *
-	 * @param user $user
-	 * @param auth $auth
+	 * @var ContainerInterface
 	 */
-	public function __construct(user $user, auth $auth)
+	private $container;
+
+	public function __construct(ContainerInterface $container)
 	{
-		$this->user = $user;
-		$this->auth = $auth;
+		$this->container = $container;
 	}
 
 	/**
-	* This listener is run when the KernelEvents::EXCEPTION event is triggered
-	*
-	* @param GetResponseEvent $event
-	*/
-	public function on_kernel_request(GetResponseEvent $event)
+	 * {@inheritdoc}
+	 */
+	public function onKernelRequest(GetResponseEvent $event)
 	{
-		// Start session management
-		$this->user->session_begin();
-		$this->auth->acl($this->user->data);
-		$this->user->setup('app');
+		parent::onKernelRequest($event);
+
+		// Sets the session id if available (it may not be accessible to php due to disable_super_globals
+		if ($event->isMasterRequest())
+		{
+			$request = $event->getRequest();
+
+			if ($request->hasSession())
+			{
+				$session = $request->getSession();
+				$cookie_name = $session->getName();
+
+				if ($request->cookies->has($cookie_name))
+				{
+					$request->getSession()->setId($request->cookies->get($cookie_name));
+				}
+				else
+				{
+					// Handle legacy sessions ids cookies
+					// @deprecated 3.3.0-dev (To be removed in 4.0)
+					if ($request->cookies->has('sid'))
+					{
+						$request->getSession()->setId($request->cookies->get('sid'));
+					}
+				}
+			}
+		}
 	}
 
-	static public function getSubscribedEvents()
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function getSession()
 	{
-		return array(
-			KernelEvents::REQUEST => ['on_kernel_request', 1024],
-		);
+		if (!$this->container->has('session')) {
+			return;
+		}
+
+		return $this->container->get('session');
 	}
 }

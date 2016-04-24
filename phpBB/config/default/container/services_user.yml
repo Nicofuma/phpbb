@@ -8,6 +8,13 @@ services:
     user:
         class: phpbb\user
         arguments:
+            - '@security.token_storage'
+            - '@user_helper'
+            - '@language'
+
+    user_helper:
+        class: phpbb\security\user\user_helper
+        arguments:
             - '@language'
             - '%datetime.class%'
 

@@ -1,0 +1,32 @@
+services:
+    security.login_controller:
+        class: phpbb\security\controller\login_controller
+        arguments:
+            - '@security.authentication_utils'
+            - '@security.token_storage'
+            - '@controller.helper'
+            - '@language'
+            - '@template'
+
+    security.guard.form_login_authenticator:
+        class: phpbb\security\guard\form_login_authenticator
+        arguments:
+            - '@routing.helper'
+            - '@passwords.manager'
+
+    security.user_provider.phpbb_database:
+        class: phpbb\security\user\phpbb_database_provider
+        arguments:
+            - '@user_loader'
+
+    security.authentication.listener.anonymous:
+        class: phpbb\security\listener\anonymous_authentication_listener
+        public: false
+        arguments:
+            - '@security.token_storage'
+            - ~
+            - '@user_loader'
+            - '@?logger'
+            - '@security.authentication.manager'
+        tags:
+            - { name: monolog.logger, channel: security }

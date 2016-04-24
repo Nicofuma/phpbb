@@ -1,0 +1,14 @@
+phpbb_user_login:
+    path: /login
+    methods:  [GET, POST]
+    defaults: { _controller: security.login_controller:login_action }
+
+phpbb_user_login_check:
+    path: /login_check
+    methods:  [POST]
+    defaults: { _controller: security.login_controller:login_check_action }
+
+phpbb_user_logout:
+    path: /logout
+    methods:  [GET]
+    defaults: { _controller: security.login_controller:logout_action }

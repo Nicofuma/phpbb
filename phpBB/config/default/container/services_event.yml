@@ -4,6 +4,9 @@ services:
         arguments:
             - '@service_container'
 
+    event_dispatcher:
+        alias: dispatcher
+
     kernel_exception_subscriber:
         class: phpbb\event\kernel_exception_subscriber
         arguments:

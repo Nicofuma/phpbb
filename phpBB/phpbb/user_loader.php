@@ -84,7 +84,7 @@ class user_loader
 
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$this->users[$row['user_id']] = $row;
+				$this->users[(int) $row['user_id']] = $row;
 			}
 			$this->db->sql_freeresult($result);
 		}
@@ -110,9 +110,9 @@ class user_loader
 
 		if ($row)
 		{
-			$this->users[$row['user_id']] = $row;
+			$this->users[(int) $row['user_id']] = $row;
 
-			return $row['user_id'];
+			return (int) $row['user_id'];
 		}
 
 		return ANONYMOUS;
@@ -130,12 +130,14 @@ class user_loader
 	*/
 	public function get_user($user_id, $query = false)
 	{
+		$user_id = (int) $user_id;
+
 		if (isset($this->users[$user_id]))
 		{
 			return $this->users[$user_id];
 		}
 		// Query them if we must (if ANONYMOUS is sent as the user_id and we have not loaded Anonymous yet, we must load Anonymous as a last resort)
-		else if ($query || $user_id == ANONYMOUS)
+		else if ($query || $user_id === ANONYMOUS)
 		{
 			$this->load_users(array($user_id));
 

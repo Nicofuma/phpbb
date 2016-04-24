@@ -311,7 +311,7 @@ class kernel implements kernel_interface, TerminableInterface
 	/**
 	 * Registers phpBB's legacy hook handler
 	 *
-	 * @deprecated To be removed in 4.0
+	 * @deprecated 3.3.0-dev (To be removed in 4.0)
 	 */
 	protected function load_hook_handler()
 	{

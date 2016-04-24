@@ -1,0 +1,51 @@
+services:
+    session:
+        class: Symfony\Component\HttpFoundation\Session\Session
+        arguments:
+            - '@session.storage'
+            - '@session.attribute_bag'
+            - '@session.flash_bag'
+
+    session.storage.metadata_bag:
+        class: Symfony\Component\HttpFoundation\Session\Storage\MetadataBag
+        public: false
+        arguments:
+            - '%session.metadata.storage_key%'
+            - '%session.metadata.update_threshold%'
+
+    session.storage.native:
+        class: Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage
+        arguments:
+            - '%session.storage.options%'
+            - '@session.handler'
+            - '@session.storage.metadata_bag'
+
+    session.flash_bag:
+        class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
+        public: false
+
+    session.attribute_bag:
+        class: Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag
+        public: false
+
+    session.handler.native_file:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler
+        public: false
+        arguments:
+            - '%session.save_path%'
+
+    session.handler.write_check:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler:
+        public: false
+
+    session_listener:
+        class: phpbb\event\subscriber\session_subscriber
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    session.save_listener:
+        class: Symfony\Component\HttpKernel\EventListener\SaveSessionListener
+        tags:
+            - { name: kernel.event_subscriber }

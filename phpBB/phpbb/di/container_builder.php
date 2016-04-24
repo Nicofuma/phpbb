@@ -16,6 +16,9 @@ namespace phpbb\di;
 use phpbb\filesystem\filesystem;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Compiler\AddSecurityVotersPass;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\GuardAuthenticationFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -147,7 +150,13 @@ class container_builder
 			}
 			else
 			{
-				$this->container_extensions = array(new extension\core($this->get_config_path()));
+				$securityExtension = new SecurityExtension();
+				$securityExtension->addSecurityListenerFactory(new GuardAuthenticationFactory());
+
+				$this->container_extensions = [
+					$securityExtension,
+					new extension\core($this->get_config_path()),
+				];
 
 				if ($this->use_extensions)
 				{
@@ -170,6 +179,9 @@ class container_builder
 
 				// Event listeners "Symfony style"
 				$this->container->addCompilerPass(new RegisterListenersPass('dispatcher'));
+
+				$this->container->addCompilerPass(new AddSecurityVotersPass());
+				$this->container->addCompilerPass(new pass\security_pass());
 
 				if ($this->use_extensions)
 				{

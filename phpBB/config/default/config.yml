@@ -1,1 +1,41 @@
 # phpBB's config file (This line is needed because of the packager)
+security:
+    providers:
+        phpbb_db:
+            id: security.user_provider.phpbb_database
+
+        phpbb_front:
+            chain:
+                providers:
+                    - phpbb_db
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|assets|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            logout:
+                path:   session_logout
+                target: homepage
+            anonymous: true
+            switch_user: true
+            guard:
+                authenticators:
+                    - security.guard.form_login_authenticator
+                entry_point: security.guard.form_login_authenticator
+
+    access_control:
+        - { path: ^/adm/index.php, roles: IS_AUTHENTICATED_FULLY }
+
+        # All other path require a connected user
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+core:
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  ~
+        use_cookies: true
+        cookie_httponly: true
+       # cookie_secure: false

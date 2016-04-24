@@ -1,7 +1,7 @@
 services:
 # ----- Session management -----
-    auth.session_subscriber:
-        class: phpbb\event\subscriber\session_subscriber
+    auth.legacy_session_subscriber:
+        class: phpbb\event\subscriber\legacy_session_subscriber
         arguments:
             - '@user'
             - '@auth'
