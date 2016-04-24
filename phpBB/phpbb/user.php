@@ -137,26 +137,6 @@ class user
 	}
 
 	/**
-	 * More advanced language substitution
-	 * Function to mimic sprintf() with the possibility of using phpBB's language system to substitute nullar/singular/plural forms.
-	 * Params are the language key and the parameters to be substituted.
-	 * This function/functionality is inspired by SHS` and Ashe.
-	 *
-	 * Example call: <samp>$user->lang('NUM_POSTS_IN_QUEUE', 1);</samp>
-	 *
-	 * If the first parameter is an array, the elements are used as keys and subkeys to get the language entry:
-	 * Example: <samp>$user->lang(array('datetime', 'AGO'), 1)</samp> uses $user->lang['datetime']['AGO'] as language entry.
-	 *
-	 * @deprecated 3.2.0-dev (To be removed 4.0.0)
-	 */
-	public function lang()
-	{
-		$args = func_get_args();
-
-		return call_user_func_array([$this->language, 'lang'], $args);
-	}
-
-	/**
 	 * Specify/Get image
 	 *
 	 * @deprecated 3.3.0-dev Generate the img tag directly in the template (To be removed 4.0.0)
@@ -182,7 +162,135 @@ class user
 	 */
 	public function setup($lang_set = false, $style_id = false)
 	{
-		$this->language->add_lang($lang_set);
+		$this->add_lang($lang_set);
+
+		if ($style_id !== false && $style_id !== null)
+		{
+			$this->style_helper->set_forced_style($style_id);
+		}
+	}
+
+	/**
+	 * More advanced language substitution
+	 * Function to mimic sprintf() with the possibility of using phpBB's language system to substitute nullar/singular/plural forms.
+	 * Params are the language key and the parameters to be substituted.
+	 * This function/functionality is inspired by SHS` and Ashe.
+	 *
+	 * Example call: <samp>$user->lang('NUM_POSTS_IN_QUEUE', 1);</samp>
+	 *
+	 * If the first parameter is an array, the elements are used as keys and subkeys to get the language entry:
+	 * Example: <samp>$user->lang(array('datetime', 'AGO'), 1)</samp> uses $user->lang['datetime']['AGO'] as language entry.
+	 *
+	 * @deprecated 3.2.0-dev (To be removed 4.0.0)
+	 */
+	public function lang()
+	{
+		$args = func_get_args();
+
+		return call_user_func_array([$this->language, 'lang'], $args);
+	}
+
+	/**
+	 * Determine which plural form we should use.
+	 * For some languages this is not as simple as for English.
+	 *
+	 * @param $number        int|float   The number we want to get the plural case for. Float numbers are floored.
+	 * @param $force_rule    mixed   False to use the plural rule of the language package
+	 *                               or an integer to force a certain plural rule
+	 * @return int|bool     The plural-case we need to use for the number plural-rule combination, false if $force_rule
+	 * 					   was invalid.
+	 *
+	 * @deprecated: 3.2.0-dev (To be removed: 4.0.0)
+	 */
+	public function get_plural_form($number, $force_rule = false)
+	{
+		return $this->language->get_plural_form($number, $force_rule);
+	}
+
+	/**
+	 * Add Language Items - use_db and use_help are assigned where needed (only use them to force inclusion)
+	 *
+	 * @param mixed $lang_set specifies the language entries to include
+	 * @param bool $use_db internal variable for recursion, do not use	@deprecated 3.2.0-dev (To be removed: 3.3.0)
+	 * @param bool $use_help internal variable for recursion, do not use	@deprecated 3.2.0-dev (To be removed: 3.3.0)
+	 * @param string $ext_name The extension to load language from, or empty for core files
+	 *
+	 * Examples:
+	 * <code>
+	 * $lang_set = array('posting', 'help' => 'faq');
+	 * $lang_set = array('posting', 'viewtopic', 'help' => array('bbcode', 'faq'))
+	 * $lang_set = array(array('posting', 'viewtopic'), 'help' => array('bbcode', 'faq'))
+	 * $lang_set = 'posting'
+	 * $lang_set = array('help' => 'faq', 'db' => array('help:faq', 'posting'))
+	 * </code>
+	 *
+	 * Note: $use_db and $use_help should be removed. The old function was kept for BC purposes,
+	 * 		so the BC logic is handled here.
+	 *
+	 * @deprecated: 3.2.0-dev (To be removed: 4.0.0)
+	 */
+	public function add_lang($lang_set, $use_db = false, $use_help = false, $ext_name = '')
+	{
+		if (is_array($lang_set))
+		{
+			foreach ($lang_set as $key => $lang_file)
+			{
+				// Please do not delete this line.
+				// We have to force the type here, else [array] language inclusion will not work
+				$key = (string) $key;
+
+				if ($key === 'db')
+				{
+					// This is never used
+					$this->add_lang($lang_file, true, $use_help, $ext_name);
+				}
+				else if ($key === 'help')
+				{
+					$this->add_lang($lang_file, $use_db, true, $ext_name);
+				}
+				else if (!is_array($lang_file))
+				{
+					$this->set_lang($lang_file, $use_help, $ext_name);
+				}
+				else
+				{
+					$this->add_lang($lang_file, $use_db, $use_help, $ext_name);
+				}
+			}
+		}
+		else if ($lang_set)
+		{
+			$this->set_lang($lang_set, $use_help, $ext_name);
+		}
+	}
+
+	/**
+	 * BC function for loading language files
+	 *
+	 * @deprecated 3.2.0-dev (To be removed: 4.0.0)
+	 */
+	private function set_lang($lang_set, $use_help, $ext_name)
+	{
+		if (empty($ext_name))
+		{
+			$ext_name = null;
+		}
+
+		if ($use_help && strpos($lang_set, '/') !== false)
+		{
+			$component = dirname($lang_set) . '/help_' . basename($lang_set);
+
+			if ($component[0] === '/')
+			{
+				$component = substr($component, 1);
+			}
+		}
+		else
+		{
+			$component = (($use_help) ? 'help_' : '') . $lang_set;
+		}
+
+		$this->language->add_lang($component, $ext_name);
 	}
 
 	public function update_session_infos()

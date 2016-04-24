@@ -72,3 +72,12 @@ services:
             - '@config'
             - '@dbal.conn'
             - '@security.authorization_checker'
+
+    style_subscriber:
+        class: phpbb\event\subscriber\style_subscriber
+        arguments:
+            - '@security.token_storage'
+            - '@style_helper'
+            - '@template'
+        tags:
+            - { name: kernel.event_subscriber }

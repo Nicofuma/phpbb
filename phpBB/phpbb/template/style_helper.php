@@ -121,15 +121,6 @@ class style_helper
 	}
 
 	/**
-	 * @param int $board_style
-	 */
-	public function set_board_style($board_style)
-	{
-		$this->board_style = (int) $board_style;
-		$this->style = null;
-	}
-
-	/**
 	 * @param int $forced_style
 	 */
 	public function set_forced_style($forced_style)
