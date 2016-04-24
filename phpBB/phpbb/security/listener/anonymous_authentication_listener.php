@@ -13,8 +13,7 @@
 
 namespace phpbb\security\listener;
 
-use phpbb\security\user\user;
-use phpbb\user_loader;
+use phpbb\security\user\user_helper;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
@@ -31,8 +30,8 @@ class anonymous_authentication_listener implements ListenerInterface
 	/** @var string */
 	private $secret;
 
-	/** @var user_loader */
-	private $user_loader;
+	/** @var user_helper */
+	private $user_helper;
 
 	/** @var null|AuthenticationManagerInterface */
 	private $authenticationManager;
@@ -43,15 +42,15 @@ class anonymous_authentication_listener implements ListenerInterface
 	/**
 	 * @param TokenStorageInterface $tokenStorage
 	 * @param string $secret
-	 * @param user_loader $user_loader
+	 * @param user_helper $user_helper
 	 * @param LoggerInterface|null $logger
 	 * @param AuthenticationManagerInterface|null $authenticationManager
 	 */
-	public function __construct(TokenStorageInterface $tokenStorage, $secret, user_loader $user_loader, LoggerInterface $logger = null, AuthenticationManagerInterface $authenticationManager = null)
+	public function __construct(TokenStorageInterface $tokenStorage, $secret, user_helper $user_helper, LoggerInterface $logger = null, AuthenticationManagerInterface $authenticationManager = null)
 	{
 		$this->tokenStorage = $tokenStorage;
 		$this->secret = $secret;
-		$this->user_loader = $user_loader;
+		$this->user_helper = $user_helper;
 		$this->authenticationManager = $authenticationManager;
 		$this->logger = $logger;
 	}
@@ -69,7 +68,7 @@ class anonymous_authentication_listener implements ListenerInterface
 		}
 
 		try {
-			$anonymous_user = user::createFromRawArray($this->user_loader->get_user(ANONYMOUS));
+			$anonymous_user = $this->user_helper->create_anonymous_user();
 			$token = new AnonymousToken($this->secret, $anonymous_user, array());
 			if (null !== $this->authenticationManager)
 			{

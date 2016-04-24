@@ -25,8 +25,17 @@ services:
         arguments:
             - '@security.token_storage'
             - ~
-            - '@user_loader'
+            - '@user_helper'
             - '@?logger'
             - '@security.authentication.manager'
         tags:
             - { name: monolog.logger, channel: security }
+
+    security.firewall:
+        class: phpbb\security\firewall
+        arguments:
+            - '@security.firewall.map'
+            - '@event_dispatcher'
+        tags:
+            - { name: kernel.event_subscriber }
+
