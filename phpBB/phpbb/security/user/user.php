@@ -15,15 +15,42 @@ namespace phpbb\security\user;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Class representing the current user
+ *
+ * /!\ Warning: the public access of  the properties is deprecated. They will be private in 4.0.0
+ */
 class user implements UserInterface
 {
 	/** @var array */
 	public $data;
 
+	/** @var \DateTimeZone */
+	public $timezone;
+
+	/** @var string */
+	public $lang_name;
+
+	/** @var string */
+	public $date_format;
+
 	public static function createFromRawArray(array $data)
 	{
 		$user = new self();
 		$user->data = $data;
+
+		$user->date_format = $user->data['user_dateformat'];
+		$user->lang_name = $user->data['user_lang'];
+
+		try
+		{
+			$user->timezone = new \DateTimeZone($user->data['user_timezone']);
+		}
+		catch (\Exception $e)
+		{
+			// If the timezone the user has selected is invalid, we fall back to UTC.
+			$user->timezone = new \DateTimeZone('UTC');
+		}
 
 		return $user;
 	}
@@ -82,5 +109,13 @@ class user implements UserInterface
 	public function eraseCredentials()
 	{
 		$this->data['password'] = '******';
+	}
+
+	/**
+	 * @return \DateTimeZone
+	 */
+	public function get_timezone()
+	{
+		return $this->timezone;
 	}
 }

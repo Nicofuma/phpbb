@@ -13,8 +13,10 @@
 
 namespace phpbb\security\user;
 
+use phpbb\config\config;
 use phpbb\datetime;
 use phpbb\language\language;
+use phpbb\user_loader;
 
 class user_helper
 {
@@ -24,21 +26,26 @@ class user_helper
 	/** @var string */
 	private $datetime_class;
 
+	/** @var config */
+	private $config;
+
+	/** @var user_loader */
+	private $user_loader;
+
 	/**
 	 * user_helper constructor.
 	 *
-	 * @param language $language
-	 * @param string $datetime_class
+	 * @param user_loader $user_loader
+	 * @param config      $config
+	 * @param language    $language
+	 * @param string      $datetime_class
 	 */
-	public function __construct(language $language, $datetime_class)
+	public function __construct(user_loader $user_loader, config $config, language $language, $datetime_class)
 	{
 		$this->language = $language;
 		$this->datetime_class = $datetime_class;
-	}
-
-	public function setup(user $user, $lang_set = false, $style_id = false)
-	{
-
+		$this->config = $config;
+		$this->user_loader = $user_loader;
 	}
 
 	/**
@@ -101,5 +108,21 @@ class user_helper
 		$date = \DateTime::createFromFormat($format, $time, $timezone);
 
 		return ($date !== false) ? $date->format('U') : false;
+	}
+
+	/**
+	 * Creates an anonymous user and initialize it according to the board config
+	 *
+	 * @return user
+	 */
+	public function create_anonymous_user()
+	{
+		$data = $this->user_loader->get_user(ANONYMOUS);
+
+		$data['user_lang'] = basename($this->config['default_lang']);
+		$data['user_dateformat'] = $this->config['default_dateformat'];
+		$data['user_timezone'] = $this->config['board_timezone'];
+
+		return user::createFromRawArray($data);
 	}
 }

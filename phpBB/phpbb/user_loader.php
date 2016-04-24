@@ -125,8 +125,7 @@ class user_loader
 	* @param bool $query Should we query the database if this user has not yet been loaded?
 	* 						Typically this should be left as false and you should make sure
 	* 						you load users ahead of time with load_users()
-	* @return array|bool Row from the database of the user or Anonymous if the user wasn't loaded/does not exist
-	* 						or bool False if the anonymous user was not loaded
+	* @return array Row from the database of the user or Anonymous if the user wasn't loaded/does not exist
 	*/
 	public function get_user($user_id, $query = false)
 	{

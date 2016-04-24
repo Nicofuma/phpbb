@@ -170,3 +170,8 @@ services:
             - '@config'
             - '@file_downloader'
             - '@user'
+
+    system_helper:
+        class: phpbb\system_helper
+        arguments:
+            - '@config'

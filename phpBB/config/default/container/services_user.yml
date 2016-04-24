@@ -9,14 +9,28 @@ services:
         class: phpbb\user
         arguments:
             - '@security.token_storage'
-            - '@user_helper'
             - '@language'
+            - '@request_stack'
+            - '@user_helper'
+            - '@session_helper'
+            - '@style_helper'
+            - '@system_helper'
 
     user_helper:
         class: phpbb\security\user\user_helper
         arguments:
+            - '@user_loader'
+            - '@config'
             - '@language'
             - '%datetime.class%'
+
+    session_helper:
+        class: phpbb\security\user\session_helper
+        arguments:
+            - '@request'
+            - '@symfony_request'
+            - '@filesystem'
+            - '%core.root_path%'
 
     user_loader:
         class: phpbb\user_loader

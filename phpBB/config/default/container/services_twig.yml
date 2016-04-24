@@ -65,3 +65,10 @@ services:
 
     template_context:
         class: phpbb\template\context
+
+    style_helper:
+        class: phpbb\template\style_helper
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@security.authorization_checker'

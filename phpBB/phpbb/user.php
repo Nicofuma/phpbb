@@ -14,7 +14,10 @@
 namespace phpbb;
 
 use phpbb\language\language;
+use phpbb\security\user\session_helper;
 use phpbb\security\user\user_helper;
+use phpbb\template\style_helper;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -34,24 +37,63 @@ class user
 	/** @var language */
 	private $language;
 
-	public function __construct(TokenStorageInterface $token_storage, user_helper $user_helper, language $language)
+	/** @var RequestStack */
+	private $request_stack;
+
+	/** @var session_helper */
+	private $session_helper;
+
+	/** @var style_helper */
+	private $style_helper;
+
+	/** @var system_helper */
+	private $system_helper;
+
+	public function __construct(
+		TokenStorageInterface $token_storage,
+		language $language,
+		RequestStack $request_stack,
+		user_helper $user_helper,
+		session_helper $session_helper,
+		style_helper $style_helper,
+		system_helper $system_helper
+	)
 	{
 		$this->token_storage = $token_storage;
 		$this->user_helper = $user_helper;
 		$this->language = $language;
+		$this->request_stack = $request_stack;
+		$this->session_helper = $session_helper;
+		$this->style_helper = $style_helper;
+		$this->system_helper = $system_helper;
 	}
 
 	public function __get($name)
 	{
-		if ($name === 'lang')
+		switch ($name)
 		{
-			return $this->language->get_lang_array();
-		}
-		else if ($name === 'help')
-		{
-			$lang_array = $this->language->get_lang_array();
+			case 'lang':
+				return $this->language->get_lang_array();
+			case 'help':
+				$lang_array = $this->language->get_lang_array();
 
-			return $lang_array['__help'];
+				return $lang_array['__help'];
+			case 'host':
+				return $this->request_stack->getMasterRequest()->getHost();
+			case 'browser':
+				return $this->request_stack->getMasterRequest()->headers->get('User-Agent');
+			case 'referer':
+				return $this->request_stack->getMasterRequest()->headers->get('Referer');
+			case 'forwarded_for':
+				return $this->request_stack->getMasterRequest()->headers->get('X-Forwarded-For');
+			case 'page':
+				return $this->session_helper->get_current_page();
+			case 'session_id':
+				return $this->request_stack->getMasterRequest()->getSession()->getId();
+			case 'style':
+				return $this->style_helper->get_style();
+			case 'load':
+				return $this->system_helper->get_load();
 		}
 
 		if (!isset($this->get_user()->{$name}))
@@ -129,6 +171,18 @@ class user
 			$title = ' title="' . $alt . '"';
 		}
 		return '<span class="imageset ' . $img . '"' . $title . '>' . $alt . '</span>';
+	}
+
+	/**
+	 * Setup basic user-specific items (style, language, ...)
+	 *
+	 * Now it only adds the language files. The other items are handled by some event listeners.
+	 *
+	 * @deprecated 3.2.0-dev (To be removed 4.0.0)
+	 */
+	public function setup($lang_set = false, $style_id = false)
+	{
+		$this->language->add_lang($lang_set);
 	}
 
 	public function update_session_infos()
