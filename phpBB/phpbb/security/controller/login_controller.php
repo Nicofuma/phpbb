@@ -62,7 +62,7 @@ class login_controller
 	{
 		$error = $this->utils->getLastAuthenticationError();
 
-		$token = $this->token_storage->getToken();dump($token);
+		$token = $this->token_storage->getToken();
 		$user = $token !== null ? $token->getUser() : null;
 		$user = $user !== null && is_object($user) ? $user->getUsername() : null;
 

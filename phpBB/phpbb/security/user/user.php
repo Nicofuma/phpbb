@@ -22,6 +22,22 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class user implements UserInterface
 {
+	// Able to add new options (up to id 31)
+	private static $keyoptions = [
+		'viewimg' => 0,
+		'viewflash' => 1,
+		'viewsmilies' => 2,
+		'viewsigs' => 3,
+		'viewavatars' => 4,
+		'viewcensors' => 5,
+		'attachsig' => 6,
+		'bbcode' => 8,
+		'smilies' => 9,
+		'sig_bbcode' => 15,
+		'sig_smilies' => 16,
+		'sig_links' => 17
+	];
+
 	/** @var array */
 	public $data;
 
@@ -117,5 +133,56 @@ class user implements UserInterface
 	public function get_timezone()
 	{
 		return $this->timezone;
+	}
+
+	/**
+	 * Get option bit field from user options.
+	 *
+	 * @param int $key option key, as defined in $keyoptions property.
+	 * @param int|bool $data bit field value to use, or false to use $this->data['user_options']
+	 *
+	 * @return bool true if the option is set in the bit field, false otherwise
+	 */
+	public function optionget($key, $data = false)
+	{
+		$var = ($data !== false) ? $data : $this->data['user_options'];
+		return phpbb_optionget(static::$keyoptions[$key], $var);
+	}
+
+	/**
+	 * Set option bit field for user options.
+	 *
+	 * @param int $key Option key, as defined in $keyoptions property.
+	 * @param bool $value True to set the option, false to clear the option.
+	 * @param int|bool $data Current bit field value, or false to use $this->data['user_options']
+	 *
+	 * @return int|bool If $data is false, the bit field is modified and
+	 *                  written back to $this->data['user_options'], and
+	 *                  return value is true if the bit field changed and
+	 *                  false otherwise. If $data is not false, the new
+	 *                  bitfield value is returned.
+	 */
+	public function optionset($key, $value, $data = false)
+	{
+		$var = ($data !== false) ? $data : $this->data['user_options'];
+
+		$new_var = phpbb_optionset(static::$keyoptions[$key], $value, $var);
+
+		if ($data === false)
+		{
+			if ($new_var != $var)
+			{
+				$this->data['user_options'] = $new_var;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return $new_var;
+		}
 	}
 }

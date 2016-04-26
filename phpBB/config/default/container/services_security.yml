@@ -39,3 +39,14 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+# ----- Acl -----
+    security.acl.checker:
+        class: phpbb\security\acl\acl_checker
+        arguments:
+            - '@security.acl.provider'
+
+    security.acl.provider:
+        class: phpbb\security\acl\acl_provider
+        arguments:
+            - '@dbal.conn'
+            - '@cache.driver'
