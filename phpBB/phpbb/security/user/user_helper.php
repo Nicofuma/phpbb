@@ -68,7 +68,7 @@ class user_helper
 		}
 
 		/** @var datetime $time */
-		$time = new $this->datetime_class($this, '@' . (int) $gmepoch, $utc);
+		$time = new $this->datetime_class($user, '@' . (int) $gmepoch, $utc);
 		$time->setTimezone($user->get_timezone());
 
 		return $time->format($format, $forcedate);

@@ -71,6 +71,8 @@ class datetime extends \DateTime
 
 		if ($relative)
 		{
+			global $phpbb_container;
+
 			/*
 			* Check the delta is less than or equal to 1 hour
 			* and the delta not more than a minute in the past
@@ -80,9 +82,9 @@ class datetime extends \DateTime
 			*/
 			if ($delta <= 3600 && $delta > -60 &&
 				($delta >= -5 || (($now_ts / 60) % 60) == (($timestamp / 60) % 60))
-				&& isset($this->user->lang['datetime']['AGO']))
+				&& $phpbb_container->get('language')->is_set(array('datetime', 'AGO')))
 			{
-				return $this->user->lang(array('datetime', 'AGO'), max(0, (int) floor($delta / 60)));
+				return $phpbb_container->get('language')->lang(array('datetime', 'AGO'), max(0, (int) floor($delta / 60)));
 			}
 			else
 			{
@@ -139,6 +141,7 @@ class datetime extends \DateTime
 	*/
 	static protected function format_cache($format, $user)
 	{
+		/** @var string $lang */
 		$lang = $user->lang_name;
 
 		if (!isset(self::$format_cache[$lang]))
@@ -148,18 +151,20 @@ class datetime extends \DateTime
 
 		if (!isset(self::$format_cache[$lang][$format]))
 		{
+			global $phpbb_container;
+
 			// Is the user requesting a friendly date format (i.e. 'Today 12:42')?
 			self::$format_cache[$lang][$format] = array(
 				'is_short'		=> strpos($format, self::RELATIVE_WRAPPER) !== false,
 				'format_short'	=> substr($format, 0, strpos($format, self::RELATIVE_WRAPPER)) . self::RELATIVE_WRAPPER . self::RELATIVE_WRAPPER . substr(strrchr($format, self::RELATIVE_WRAPPER), 1),
 				'format_long'	=> str_replace(self::RELATIVE_WRAPPER, '', $format),
-				'lang'			=> array_filter($user->lang['datetime'], 'is_string'),
+				'lang'			=> array_filter($phpbb_container->get('language')->lang_raw('datetime'), 'is_string'),
 			);
 
 			// Short representation of month in format? Some languages use different terms for the long and short format of May
 			if ((strpos($format, '\M') === false && strpos($format, 'M') !== false) || (strpos($format, '\r') === false && strpos($format, 'r') !== false))
 			{
-				self::$format_cache[$lang][$format]['lang']['May'] = $user->lang['datetime']['May_short'];
+				self::$format_cache[$lang][$format]['lang']['May'] = $phpbb_container->get('language')->lang_raw('datetime')['May_short'];
 			}
 		}
 
