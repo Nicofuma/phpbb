@@ -14,6 +14,7 @@
 namespace phpbb;
 
 use phpbb\language\language;
+use phpbb\legacy\array_wrapper;
 use phpbb\security\user\session_helper;
 use phpbb\security\user\user_helper;
 use phpbb\template\style_helper;
@@ -94,6 +95,9 @@ class user
 				return $this->style_helper->get_style();
 			case 'load':
 				return $this->system_helper->get_load();
+			case 'data':
+				$var = &$this->get_user()->data;
+				return new array_wrapper($var);
 		}
 
 		if (!isset($this->get_user()->{$name}))

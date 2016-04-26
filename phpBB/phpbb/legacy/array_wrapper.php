@@ -11,115 +11,47 @@
 *
 */
 
-namespace phpbb\security\guard;
+namespace phpbb\legacy;
 
-use phpbb\passwords\manager;
-use phpbb\routing\helper;
 use phpbb\security\exception;
-use phpbb\security\user\user;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 
-class form_login_authenticator extends AbstractFormLoginAuthenticator
+class array_wrapper implements \IteratorAggregate, \ArrayAccess, \Countable
 {
-	/** @var helper */
-	private $routing_helper;
+	/** @var array */
+	private $data;
 
-	/** @var manager */
-	private $password_manager;
-
-	public function __construct(helper $routing_helper, manager $password_manager)
+	public function __construct(&$array)
 	{
-		$this->routing_helper = $routing_helper;
-		$this->password_manager = $password_manager;
+		$this->data = &$array;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function getLoginUrl()
+	public function offsetExists($offset)
 	{
-		return $this->routing_helper->route('phpbb_user_login');
+		return array_key_exists($offset, $this->data);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function getDefaultSuccessRedirectUrl()
+	public function offsetGet($offset)
 	{
-		return append_sid('');
+		return $this->data[$offset];
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getCredentials(Request $request)
+	public function offsetSet($offset, $value)
 	{
-		// TODO: dispatch event to handle attempts count (check if the captcha needs to be checked and then complete th credentials)
-		if ($request->getMethod() === Request::METHOD_POST && $request->request->get('login', null) === 'Login')
-		{
-			$username = trim($request->request->get('username'));
-			if (!$username)
-			{
-				throw new exception\bad_credentials_exception('LOGIN_ERROR_USERNAME', ['username' => $username]);
-			}
-
-			$password = trim($request->request->get('password'));
-			if (!$password)
-			{
-				throw new exception\bad_credentials_exception('LOGIN_ERROR_PASSWORD', ['password' => $password]);
-			}
-
-			return [
-				'username' => $username,
-				'password' => $password,
-			];
-		}
-
-		return null;
+		$this->data[$offset] = $value;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getUser($credentials, UserProviderInterface $userProvider)
+	public function offsetUnset($offset)
 	{
-		return $userProvider->loadUserByUsername($credentials['username']);
+		unset($this->data[$offset]);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function checkCredentials($credentials, UserInterface $user)
+	public function count()
 	{
-		if (!$user instanceof user)
-		{
-			throw new exception\unsupported_user_exception('SECURITY_ERROR_UNSUPPORTED_USER', ['class' => get_class($user)]);
-		}
-
-		// TODO: display event to handle count attempts (block or check captcha)
-		return $this->password_manager->check($credentials['password'], $user->getPassword(), $user->data);
+		return count($this->data);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+	public function getIterator()
 	{
-		// TODO: count attempts (dispatch event)
-		return parent::onAuthenticationFailure($request, $exception);
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
-	{
-		// TODO: reset attempts (dispatch event)
-		return parent::onAuthenticationSuccess($request, $token, $providerKey);
+		return new \ArrayIterator($this->data);
 	}
 }
