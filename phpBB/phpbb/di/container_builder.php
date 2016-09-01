@@ -21,6 +21,7 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\GuardAuth
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -480,7 +481,7 @@ class container_builder
 
 			$cached_container_dump = $dumper->dump(array(
 				'class'      => 'phpbb_cache_container',
-				'base_class' => 'Symfony\\Component\\DependencyInjection\\ContainerBuilder',
+				'base_class' => Container::class,
 			));
 
 			$cache->write($cached_container_dump, $this->container->getResources());
