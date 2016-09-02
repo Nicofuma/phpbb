@@ -50,8 +50,13 @@ class user implements UserInterface
 	/** @var string */
 	public $date_format;
 
-	public static function createFromRawArray(array $data)
+	public static function createFromRawArray($data)
 	{
+		$data['is_registered'] = ($data['user_id'] != ANONYMOUS && ($data['user_type'] == USER_NORMAL || $data['user_type'] == USER_FOUNDER)) ? true : false;
+		$data['is_bot'] = (!$data['is_registered'] && $data['user_id'] != ANONYMOUS) ? true : false;
+		$data['user_lang'] = basename($data['user_lang']);
+		$data['session_last_visit'] = null;
+
 		$user = new self();
 		$user->data = $data;
 

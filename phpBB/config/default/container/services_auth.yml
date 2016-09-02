@@ -1,13 +1,4 @@
 services:
-# ----- Session management -----
-    auth.legacy_session_subscriber:
-        class: phpbb\event\subscriber\legacy_session_subscriber
-        arguments:
-            - '@user'
-            - '@auth'
-        tags:
-            - { name: kernel.event_subscriber }
-
 # ----- Auth management -----
     auth:
         class: phpbb\auth\auth

@@ -8,6 +8,16 @@ services:
             - '@language'
             - '@template'
 
+    security.confirm_password_controller:
+        class: phpbb\security\controller\confirm_password_controller
+        arguments:
+            - '@security.authentication_utils'
+            - '@security.token_storage'
+            - '@controller.helper'
+            - '@language'
+            - '@template'
+            - '@passwords.manager'
+
     security.guard.form_login_authenticator:
         class: phpbb\security\guard\form_login_authenticator
         arguments:
@@ -19,6 +29,34 @@ services:
         arguments:
             - '@user_loader'
 
+    security.firewall:
+        class: phpbb\security\firewall
+        arguments:
+            - '@security.firewall.map'
+            - '@event_dispatcher'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    security.authentication.trust_resolver:
+        class: phpbb\security\authentication_trust_resolver
+        arguments:
+            - '@security.acl.provider'
+            - '%security.authentication.trust_resolver.anonymous_class%'
+            - '%security.authentication.trust_resolver.rememberme_class%'
+
+# ----- Event listeners -----
+    security.access.listener.re_authenticated_listener:
+        class: phpbb\security\listener\re_authenticated_listener
+        arguments:
+            - '@security.token_storage'
+            - '@security.access.decision_manager'
+            - '@routing.helper'
+            - '@?logger'
+        tags:
+            - { name: kernel.event_subscriber }
+            - { name: monolog.logger, channel: security }
+
+# ----- Security listeners -----
     security.authentication.listener.anonymous:
         class: phpbb\security\listener\anonymous_authentication_listener
         public: false
@@ -31,13 +69,15 @@ services:
         tags:
             - { name: monolog.logger, channel: security }
 
-    security.firewall:
-        class: phpbb\security\firewall
+    security.access_listener:
+        class: Symfony\Component\Security\Http\Firewall\AccessListener
         arguments:
-            - '@security.firewall.map'
-            - '@event_dispatcher'
+            - '@security.token_storage'
+            - '@security.access.decision_manager'
+            - '@security.access_map'
+            - '@security.authentication.manager'
         tags:
-            - { name: kernel.event_subscriber }
+            - { name: monolog.logger, channel: security }
 
 # ----- Acl -----
     security.acl.checker:
@@ -50,3 +90,12 @@ services:
         arguments:
             - '@dbal.conn'
             - '@cache.driver'
+
+# ----- Voters -----
+    security.voter.re_authenticated_voter:
+        class: phpbb\security\voter\re_authenticated_voter
+        public: false
+        arguments:
+            - '@security.authentication.trust_resolver'
+        tags:
+            - { name: security.voter, priority: 250 }

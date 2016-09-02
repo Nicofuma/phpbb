@@ -132,16 +132,11 @@ class phpbb_functional_test_case extends phpbb_test_case
 	* @param string	$path		Page path, relative from phpBB root path
 	* @param array $form_data	An array of form field values
 	* @param bool	$assert_response_html	Should we perform standard assertions for a normal html page
-	* @param bool	$relative If true, assume that $path is relative (the board url must be added)
 	* @return Symfony\Component\DomCrawler\Crawler
 	*/
-	static public function request($method, $path, $form_data = array(), $assert_response_html = true, $relative = true)
+	static public function request($method, $path, $form_data = array(), $assert_response_html = true)
 	{
-		if ($relative)
-		{
-			$path = self::$root_url . $path;
-		}
-		$crawler = self::$client->request($method, $path, $form_data);
+		$crawler = self::$client->request($method, self::$root_url . $path, $form_data);
 
 		if ($assert_response_html)
 		{

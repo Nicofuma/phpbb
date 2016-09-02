@@ -14,11 +14,11 @@
 // Start session management
 $user->setup();
 
-/** @var \phpbb\controller\helper $controller_helper */
-$controller_helper = $phpbb_container->get('controller.helper');
+/** @var \phpbb\routing\helper $routing_helper */
+$routing_helper = $phpbb_container->get('routing.helper');
 
 $response = new \Symfony\Component\HttpFoundation\RedirectResponse(
-	$controller_helper->route(
+	$routing_helper->route(
 		$request->variable('mode', 'faq') === 'bbcode' ? 'phpbb_help_bbcode_controller' : 'phpbb_help_faq_controller'
 	),
 	301

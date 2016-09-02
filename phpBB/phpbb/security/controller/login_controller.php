@@ -22,9 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-/**
-* Controller exception class
-*/
 class login_controller
 {
 	use translate_exception_trait;
@@ -62,30 +59,23 @@ class login_controller
 	{
 		$error = $this->utils->getLastAuthenticationError();
 
-		$token = $this->token_storage->getToken();
-		$user = $token !== null ? $token->getUser() : null;
-		$user = $user !== null && is_object($user) ? $user->getUsername() : null;
-
 		$this->twig->assign_vars([
 			'LOGIN_ERROR'		=> $error !== null ? $this->get_exception_message($this->language, $error) : null,
-			'LOGIN_EXPLAIN'		=> $user ? $this->language->lang('LOGIN_REAUTHENTICATE') : null,
+			'LOGIN_EXPLAIN'		=> null,
 
 			//'U_SEND_PASSWORD' 		=> ($config['email_enable']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=sendpassword') : '',
 			//'U_RESEND_ACTIVATION'	=> ($config['require_activation'] == USER_ACTIVATION_SELF && $config['email_enable']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=resend_act') : '',
 			//'U_TERMS_USE'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=terms'),
 			//'U_PRIVACY'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy'),
 
-			'S_DISPLAY_FULL_LOGIN'	=> $user !== null,
+			'S_DISPLAY_FULL_LOGIN'	=> true,
 			//'S_HIDDEN_FIELDS' 		=> $s_hidden_fields,
 
-			'S_ADMIN_AUTH'			=> $user !== null,
-			'USERNAME'				=> $user ?: $this->utils->getLastUsername(),
-
-			'USERNAME_CREDENTIAL'	=> 'username',
-			'PASSWORD_CREDENTIAL'	=> 'password',
+			'S_ADMIN_AUTH'			=> false,
+			'USERNAME'				=> $this->utils->getLastUsername(),
 		]);
 
-		return $this->helper->render('login_body.html', $this->language->lang('LOGIN'));
+		return $this->helper->render('security/login.html', $this->language->lang('LOGIN'));
 	}
 
 	/**
@@ -99,7 +89,7 @@ class login_controller
 	/**
 	 * Controller used to log out the user (handled by the firewall)
 	 */
-	public function logout()
+	public function logout_action()
 	{
 		// Never executed
 	}

@@ -12,3 +12,8 @@ phpbb_user_logout:
     path: /logout
     methods:  [GET]
     defaults: { _controller: security.login_controller:logout_action }
+
+phpbb_user_confirm_password:
+    path: /confirm-password
+    methods:  [GET,POST]
+    defaults: { _controller: security.confirm_password_controller:confirm_password_action }

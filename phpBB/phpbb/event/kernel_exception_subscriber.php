@@ -53,18 +53,20 @@ class kernel_exception_subscriber implements EventSubscriberInterface
 	}
 
 	/**
-	* This listener is run when the KernelEvents::EXCEPTION event is triggered
-	*
-	* @param GetResponseForExceptionEvent $event
-	* @return null
-	*/
+	 * This listener is run when the KernelEvents::EXCEPTION event is triggered
+	 *
+	 * @param GetResponseForExceptionEvent $event
+	 *
+	 * @return null
+	 */
 	public function on_kernel_exception(GetResponseForExceptionEvent $event)
 	{
 		$exception = $event->getException();
-
-		if (true)//$exception instanceof exit_exception)
+throw $exception;
+		if ($exception instanceof exit_exception)
 		{
-			throw $exception;
+			$event->stopPropagation();
+			return;
 		}
 
 		$message = $this->get_exception_message($this->language, $exception);
@@ -115,8 +117,8 @@ class kernel_exception_subscriber implements EventSubscriberInterface
 
 	static public function getSubscribedEvents()
 	{
-		return array(
-			KernelEvents::EXCEPTION		=> 'on_kernel_exception',
-		);
+		return [
+			KernelEvents::EXCEPTION		=> ['on_kernel_exception', -128],
+		];
 	}
 }

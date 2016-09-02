@@ -157,7 +157,7 @@ class acl_provider
 		$local_length = ($local_length % 31) ? ($local_length - ($local_length % 31) + 31) : $local_length;
 
 		// You thought we are finished now? Noooo... now compare them.
-		foreach ($this->acl as $forum_id => $bitstring)
+		foreach ($this->acl[$user->get_id()] as $forum_id => $bitstring)
 		{
 			if (($forum_id && strlen($bitstring) !== $local_length) || (!$forum_id && strlen($bitstring) !== $global_length))
 			{

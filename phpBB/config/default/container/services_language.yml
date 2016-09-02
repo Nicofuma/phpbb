@@ -20,3 +20,8 @@ services:
         parent: language.loader_abstract
         calls:
             - [set_extension_manager, ['@ext.manager']]
+
+    language_manager:
+        class: phpbb\language\language_manager
+        arguments:
+            - '@dbal.conn'

@@ -15,6 +15,7 @@ services:
             - '@session_helper'
             - '@style_helper'
             - '@system_helper'
+            - '@language_manager'
 
     user_helper:
         class: phpbb\security\user\user_helper

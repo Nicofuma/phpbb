@@ -18,10 +18,10 @@ $cron_type = $request->variable('cron_type', '');
 
 $get_params_array = $request->get_super_global(\phpbb\request\request_interface::GET);
 
-/** @var \phpbb\controller\helper $controller_helper */
-$controller_helper = $phpbb_container->get('controller.helper');
+/** @var \phpbb\routing\helper $routing_helper */
+$routing_helper = $phpbb_container->get('routing.helper');
 $response = new RedirectResponse(
-	$controller_helper->route('phpbb_cron_run', $get_params_array),
+	$routing_helper->route('phpbb_cron_run', $get_params_array),
 	301
 );
 $response->send();

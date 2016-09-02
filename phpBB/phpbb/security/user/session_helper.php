@@ -41,6 +41,8 @@ class session_helper
 	 * @param Request $symfony_request
 	 * @param filesystem $filesystem
 	 * @param string $root_path
+	 *
+	 * TODO : Use the request stack
 	 */
 	public function __construct(request_interface $request, Request $symfony_request, filesystem $filesystem, $root_path)
 	{

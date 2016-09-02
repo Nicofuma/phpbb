@@ -18,10 +18,10 @@ $pm_id			= $request->variable('pm', 0);
 
 $redirect_route_name = ($pm_id === 0) ? 'phpbb_report_post_controller' : 'phpbb_report_pm_controller';
 
-/** @var \phpbb\controller\helper $controller_helper */
-$controller_helper = $phpbb_container->get('controller.helper');
+/** @var \phpbb\routing\helper $routing_helper */
+$routing_helper = $phpbb_container->get('routing.helper');
 $response = new RedirectResponse(
-	$controller_helper->route($redirect_route_name, array(
+	$routing_helper->route($redirect_route_name, array(
 		'id'	=> ($pm_id === 0) ? $post_id : $pm_id,
 	)),
 	301

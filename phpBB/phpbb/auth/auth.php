@@ -114,7 +114,7 @@ class auth
 		$args = func_get_args();
 		array_unshift($args, $this->current_user());
 
-		return call_user_func_array([$this->acl_checker, 'acl_get'], $args);
+		return call_user_func_array([$this->acl_checker, 'acl_gets'], $args);
 	}
 
 	/**

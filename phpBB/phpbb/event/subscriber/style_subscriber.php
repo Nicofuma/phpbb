@@ -42,8 +42,6 @@ class style_subscriber implements EventSubscriberInterface
 	}
 
 	/**
-	* This listener is run when the KernelEvents::EXCEPTION event is triggered
-	*
 	* @param GetResponseEvent $event
 	*/
 	public function on_kernel_request(GetResponseEvent $event)

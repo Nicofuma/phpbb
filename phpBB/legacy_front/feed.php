@@ -19,8 +19,8 @@
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 
-/** @var \phpbb\controller\helper $controller_helper */
-$controller_helper = $phpbb_container->get('controller.helper');
+/** @var \phpbb\routing\helper $routing_helper */
+$routing_helper = $phpbb_container->get('routing.helper');
 
 $forum_id	= $request->variable('f', 0);
 $topic_id	= $request->variable('t', 0);
@@ -28,21 +28,21 @@ $mode	= $request->variable('mode', '');
 
 if ($forum_id !== 0)
 {
-	$url = $controller_helper->route('phpbb_feed_forum', array('forum_id' => $forum_id));
+	$url = $routing_helper->route('phpbb_feed_forum', array('forum_id' => $forum_id));
 }
 else if ($topic_id !== 0)
 {
-	$url = $controller_helper->route('phpbb_feed_topic', array('topic_id' => $topic_id));
+	$url = $routing_helper->route('phpbb_feed_topic', array('topic_id' => $topic_id));
 }
 else
 {
 	try
 	{
-		$url = $controller_helper->route('phpbb_feed_overall', array('mode' => $mode));
+		$url = $routing_helper->route('phpbb_feed_overall', array('mode' => $mode));
 	}
 	catch (InvalidParameterException $e)
 	{
-		$url = $controller_helper->route('phpbb_feed_index');
+		$url = $routing_helper->route('phpbb_feed_index');
 	}
 }
 

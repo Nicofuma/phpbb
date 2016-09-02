@@ -22,9 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class session_subscriber extends BaseSessionListener
 {
-	/**
-	 * @var ContainerInterface
-	 */
+	/** @var ContainerInterface */
 	private $container;
 
 	public function __construct(ContainerInterface $container)
@@ -51,6 +49,7 @@ class session_subscriber extends BaseSessionListener
 
 				if ($request->cookies->has($cookie_name))
 				{
+					// Required because of disable_super_globals()
 					$request->getSession()->setId($request->cookies->get($cookie_name));
 				}
 				else

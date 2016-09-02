@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "311697a5c24bd7d2e0e6e28cde3609e5",
-    "content-hash": "2d1dd9ea3d8bd2672162a539957ebb7a",
+    "hash": "7b46a2835eb9a251ec228e7b62c6ed58",
+    "content-hash": "41975680945ee6340ac703196c741988",
     "packages": [
         {
             "name": "bantu/ini-get-wrapper",
@@ -3732,6 +3732,69 @@
             "time": "2016-07-28 11:13:48"
         },
         {
+            "name": "symfony/var-dumper",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "a745e9a050f6940608eea7eaae2bc5390acf2362"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/a745e9a050f6940608eea7eaae2bc5390acf2362",
+                "reference": "a745e9a050f6940608eea7eaae2bc5390acf2362",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "require-dev": {
+                "twig/twig": "~1.20|~2.0"
+            },
+            "suggest": {
+                "ext-symfony_debug": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Resources/functions/dump.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\VarDumper\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony mechanism for exploring and dumping PHP variables",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "debug",
+                "dump"
+            ],
+            "time": "2016-09-01 17:44:22"
+        },
+        {
             "name": "webmozart/assert",
             "version": "1.1.0",
             "source": {
@@ -3803,7 +3866,8 @@
         "symfony/yaml": 20,
         "symfony/browser-kit": 20,
         "symfony/css-selector": 20,
-        "symfony/dom-crawler": 20
+        "symfony/dom-crawler": 20,
+        "symfony/var-dumper": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

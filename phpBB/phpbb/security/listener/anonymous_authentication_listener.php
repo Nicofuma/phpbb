@@ -22,6 +22,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
+/**
+ * Automatically adds a Token with the anonymous user if none is already present.
+ *
+ * @see \Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener
+ */
 class anonymous_authentication_listener implements ListenerInterface
 {
 	/** @var TokenStorageInterface */

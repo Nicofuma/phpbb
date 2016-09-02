@@ -101,8 +101,13 @@ class form_login_authenticator extends AbstractFormLoginAuthenticator
 			throw new exception\unsupported_user_exception('SECURITY_ERROR_UNSUPPORTED_USER', ['class' => get_class($user)]);
 		}
 
-		// TODO: display event to handle count attempts (block or check captcha)
-		return $this->password_manager->check($credentials['password'], $user->getPassword(), $user->data);
+		// TODO: dispatch event to handle count attempts (block or check captcha)
+		if (!$this->password_manager->check($credentials['password'], $user->getPassword(), $user->data))
+		{
+			throw new exception\bad_credentials_exception('LOGIN_ERROR_PASSWORD');
+		}
+
+		return true;
 	}
 
 	/**

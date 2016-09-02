@@ -14,6 +14,7 @@
 namespace phpbb;
 
 use phpbb\language\language;
+use phpbb\language\language_manager;
 use phpbb\legacy\array_wrapper;
 use phpbb\security\user\session_helper;
 use phpbb\security\user\user_helper;
@@ -50,6 +51,9 @@ class user
 	/** @var system_helper */
 	private $system_helper;
 
+	/** @var language_manager */
+	private $language_manager;
+
 	public function __construct(
 		TokenStorageInterface $token_storage,
 		language $language,
@@ -57,7 +61,8 @@ class user
 		user_helper $user_helper,
 		session_helper $session_helper,
 		style_helper $style_helper,
-		system_helper $system_helper
+		system_helper $system_helper,
+		language_manager $language_manager
 	)
 	{
 		$this->token_storage = $token_storage;
@@ -67,6 +72,7 @@ class user
 		$this->session_helper = $session_helper;
 		$this->style_helper = $style_helper;
 		$this->system_helper = $system_helper;
+		$this->language_manager = $language_manager;
 	}
 
 	public function __get($name)
@@ -116,6 +122,16 @@ class user
 		}
 
 		return $this->get_user()->{$name} = $value;
+	}
+
+	public function __isset($name)
+	{
+		if (in_array($name, ['lang', 'help', 'host', 'browser', 'referer', 'forwarded_for', 'page', 'session_id', 'style', 'load', 'data']))
+		{
+			return true;
+		}
+
+		return isset($this->get_user()->{$name});
 	}
 
 	public function __call($name, $arguments)
@@ -297,8 +313,32 @@ class user
 		$this->language->add_lang($component, $ext_name);
 	}
 
+	/**
+	 * @deprecated 3.2.0-dev (To be removed: 4.0.0)
+	 */
+	public function is_setup()
+	{
+		return true;
+	}
+
+	/**
+	 * @deprecated 3.2.0-dev (To be removed: 4.0.0)
+	 */
+	public function session_begin()
+	{
+		// Do nothing, completely replaced by symfony sessions
+	}
+
 	public function update_session_infos()
 	{
-		// TODO
+		//$this->session_helper->update_session_infos();
+	}
+
+	/**
+	 * @deprecated 3.2.0-dev (To be removed: 4.0.0)
+	 */
+	public function get_iso_lang_id()
+	{
+		return $this->language_manager->iso_to_id($this->language->get_used_language());
 	}
 }

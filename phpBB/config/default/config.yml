@@ -15,10 +15,11 @@ security:
             security: false
 
         main:
+            provider: phpbb_front
             pattern: ^/
             logout:
-                path:   session_logout
-                target: homepage
+                path:   /user/logout
+                target: /
             anonymous: true
             switch_user: true
             guard:
@@ -27,9 +28,7 @@ security:
                 entry_point: security.guard.form_login_authenticator
 
     access_control:
-        - { path: ^/adm/index.php, roles: IS_AUTHENTICATED_FULLY }
-
-        # All other path require a connected user
+        - { path: ^/adm, roles: IS_REAUTHENTICATED }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 core:
