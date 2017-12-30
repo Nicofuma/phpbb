@@ -98,6 +98,7 @@ class installer
 			if (is_array($repositories) && !empty($repositories))
 			{
 				$this->repositories = (array) $repositories;
+				$this->repositories[] = 'https://satis.phpbb.com';
 			}
 
 			$this->packagist			= (bool) $config['exts_composer_packagist'];
@@ -471,13 +472,15 @@ class installer
 		$composer = Factory::create($io, null, false);
 
 		$core_packages = $this->get_core_packages($composer);
+		$core_repl = $core_packages;
+		unset($core_repl['composer/installers']);
 		$ext_json_data = [
 			'require' => array_merge(
 				['php' => $this->get_core_php_requirement($composer)],
 				$core_packages,
 				$this->get_extra_dependencies(),
 				$packages),
-			'replace' => $core_packages,
+			'replace' => $core_repl,
 			'repositories' => $this->get_composer_repositories(),
 			'config' => [
 				'vendor-dir'=> $this->packages_vendor_dir,
